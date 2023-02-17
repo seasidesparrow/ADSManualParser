@@ -1,0 +1,4 @@
+git+https://github.com/seasidesparrow/ADSIngestParser.git@datacite-fix
+git+https://github.com/adsabs/ADSIngestEnrichment.git@v0.1.3
+git+https://github.com/adsabs/adsabs-pyingest.git@v1.0.24
+habanero==0.7.4

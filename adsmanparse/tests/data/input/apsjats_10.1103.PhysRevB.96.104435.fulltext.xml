@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Publishing DTD with OASIS Tables with MathML3 v1.1d1 20130915//EN" "JATS-journalpublishing-oasis-article1-mathml3.dtd">
+<article article-type="research-article" xml:lang="en" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:oasis="http://www.niso.org/standards/z39-96/ns/oasis-exchange/table">
+<front>
+<journal-meta>
+<journal-id journal-id-type="publisher-id">PRB</journal-id>
+<journal-id journal-id-type="coden">PRBMDO</journal-id>
+<journal-title-group>
+<journal-title>Physical Review B</journal-title>
+<abbrev-journal-title>Phys. Rev. B</abbrev-journal-title>
+</journal-title-group>
+<issn pub-type="ppub">2469-9950</issn>
+<issn pub-type="epub">2469-9969</issn>
+<publisher>
+<publisher-name>American Physical Society</publisher-name>
+</publisher>
+</journal-meta>
+<article-meta>
+<article-id pub-id-type="doi">10.1103/PhysRevB.96.104435</article-id>
+<article-categories>
+<subj-group subj-group-type="toc-major">
+<subject>ARTICLES</subject>
+</subj-group>
+<subj-group subj-group-type="toc-minor">
+<subject>Magnetism</subject>
+</subj-group>
+</article-categories>
+<title-group>
+<article-title>Magnetic field induced phase transitions and phase diagrams of multiferroic <inline-formula><mml:math><mml:mrow><mml:msub><mml:mi>Mn</mml:mi><mml:mrow><mml:mn>0.95</mml:mn></mml:mrow></mml:msub><mml:msub><mml:mi>Co</mml:mi><mml:mrow><mml:mn>0.05</mml:mn></mml:mrow></mml:msub><mml:msub><mml:mi>WO</mml:mi><mml:mn>4</mml:mn></mml:msub></mml:mrow></mml:math></inline-formula> with cycloidal spin structure</article-title>
+<alt-title alt-title-type="running-title">MAGNETIC FIELD INDUCED PHASE TRANSITIONS AND …</alt-title>
+<alt-title alt-title-type="running-authors">I. URCELAY-OLABARRIA <italic>et al.</italic></alt-title>
+</title-group>
+<contrib-group>
+<contrib contrib-type="author"><name><surname>Urcelay-Olabarria</surname><given-names>I.</given-names></name>
+<xref ref-type="aff" rid="a1"><sup>1</sup></xref>
+<xref ref-type="author-notes" rid="n1"><sup>*</sup></xref>
+</contrib>
+<contrib contrib-type="author"><name><surname>Ressouche</surname><given-names>E.</given-names></name>
+<xref ref-type="aff" rid="a2"><sup>2</sup></xref>
+</contrib>
+<contrib contrib-type="author"><name><surname>Wang</surname><given-names>Z.</given-names></name>
+<xref ref-type="aff" rid="a3 a4"><sup>3,4</sup></xref>
+</contrib>
+<contrib contrib-type="author"><name><surname>Skourski</surname><given-names>Y.</given-names></name>
+<xref ref-type="aff" rid="a3"><sup>3</sup></xref>
+</contrib>
+<contrib contrib-type="author"><name><surname>Ivanov</surname><given-names>V. Yu.</given-names></name>
+<xref ref-type="aff" rid="a5"><sup>5</sup></xref>
+</contrib>
+<contrib contrib-type="author"><name><surname>Popov</surname><given-names>Y. F.</given-names></name>
+<xref ref-type="aff" rid="a6"><sup>6</sup></xref>
+</contrib>
+<contrib contrib-type="author"><name><surname>Vorobev</surname><given-names>G. P.</given-names></name>
+<xref ref-type="aff" rid="a6"><sup>6</sup></xref>
+</contrib>
+<contrib contrib-type="author"><name><surname>Balbashov</surname><given-names>A. M.</given-names></name>
+<xref ref-type="aff" rid="a7"><sup>7</sup></xref>
+</contrib>
+<contrib contrib-type="author"><name><surname>Qureshi</surname><given-names>N.</given-names></name>
+<xref ref-type="aff" rid="a8"><sup>8</sup></xref>
+</contrib>
+<contrib contrib-type="author"><name><surname>García-Muñoz</surname><given-names>J. L.</given-names></name>
+<xref ref-type="aff" rid="a9"><sup>9</sup></xref>
+</contrib>
+<contrib contrib-type="author"><name><surname>Skumryev</surname><given-names>V.</given-names></name>
+<xref ref-type="aff" rid="a10 a11"><sup>10,11</sup></xref>
+</contrib>
+<contrib contrib-type="author"><name><surname>Mukhin</surname><given-names>A. A.</given-names></name>
+<xref ref-type="aff" rid="a5"><sup>5</sup></xref>
+</contrib>
+<aff id="a1"><label><sup>1</sup></label>Departamento de Física Aplicada I, Escuela de Ingeniería de Bilbao, <institution>Universidad del País Vasco</institution>, UPV/EHU, 48013 Bilbao, Spain</aff>
+<aff id="a2"><label><sup>2</sup></label><institution>Université Grenoble Alpes</institution>, CEA, INAC, MEM, F-38000 Grenoble, France</aff>
+<aff id="a3"><label><sup>3</sup></label><institution>Hochfeld-Magnetlabor Dresden (HLD-EMFL) Helmholtz-Zentrum Dresden-Rossendorf</institution>, D-01314 Dresden, Germany</aff>
+<aff id="a4"><label><sup>4</sup></label>High Magnetic Field Laboratory, <institution>Chinese Academy of Sciences</institution>, Hefei, Anhui 230031, People's Republic of China</aff>
+<aff id="a5"><label><sup>5</sup></label>Prokhorov General Physics Institute, <institution>Russian Academy of Science</institution>, ul. Vavilov 38, 119991 Moscow, Russia</aff>
+<aff id="a6"><label><sup>6</sup></label>Faculty of Physics, <institution>M.V. Lomonosov Moscow State University</institution>, 119992 Moscow, Russia</aff>
+<aff id="a7"><label><sup>7</sup></label><institution>Moscow Power Engineering Institute</institution>, 105835 Moscow, Russia</aff>
+<aff id="a8"><label><sup>8</sup></label><institution>Institut Laue Langevin</institution>, 6 rue Jules Horowitz, BP156, F-38042 Grenoble, France</aff>
+<aff id="a9"><label><sup>9</sup></label>Institut de Ciència de Materials de Barcelona, ICMAB-CSIC, <institution>Campus Universitari de Bellaterra</institution>, E-08193 Bellaterra, Barcelona, Spain</aff>
+<aff id="a10"><label><sup>10</sup></label><institution>Institució Catalana de Recerca i Estudis Avancats (ICREA)</institution>, E-08010 Barcelona, Spain</aff>
+<aff id="a11"><label><sup>11</sup></label>Departament de Física, <institution>Universitat Autònoma de Barcelona</institution>, 08193 Bellaterra, Barcelona, Spain</aff>
+</contrib-group>
+<author-notes>
+<fn id="n1"><label><sup>*</sup></label><p>irene.urcelay@ehu.eus</p></fn>
+</author-notes>
+<pub-date pub-type="ppub" iso-8601-date="2017-09-01"><month>September</month><year>2017</year></pub-date>
+<pub-date pub-type="epub" iso-8601-date="2017-09-25"><day>25</day><month>September</month><year>2017</year></pub-date>
+<volume>96</volume>
+<issue>10</issue>
+<elocation-id>104435</elocation-id>
+<history>
+<date date-type="received" iso-8601-date="2017-07-31"><day>31</day><month>July</month><year>2017</year></date>
+<date date-type="rev-recd" iso-8601-date="2017-09-06"><day>6</day><month>September</month><year>2017</year></date>
+</history>
+<permissions>
+<copyright-statement>©2017 American Physical Society</copyright-statement>
+<copyright-year>2017</copyright-year>
+<copyright-holder>American Physical Society</copyright-holder>
+</permissions>
+<abstract><p>Slightly Co-doped <inline-formula><mml:math><mml:msub><mml:mi>MnWO</mml:mi><mml:mn>4</mml:mn></mml:msub></mml:math></inline-formula> at the lowest 5% Co concentration, for which the multiferroic cycloidal phase becomes a ground state, has been studied in magnetic fields up to 60 T by bulk magnetic and electric polarization measurements along different crystallographic directions. The field induced magnetic transitions up to 12 T and the ways they proceed were tracked also by single-crystal neutron diffraction, and the relevant field induced magnetic structures were identified and refined. The complete magnetoelectric phase diagrams for magnetic fields along distinct directions in relation to the cycloidal spin structure have been constructed for magnetic field values exceeding those necessary to induce a spin-flip transition into the paramagnetic state. Their common feature is the existence of nonpolar sinusoidal phases identified by the disappearance of the electric polarization in a field regime slightly below the spin-flip transition. At lower magnetic fields either continuous or abrupt field induced reorientations of the cycloidal magnetic structures were observed, respectively, for a field direction along the crystallographic <inline-formula><mml:math><mml:mi>b</mml:mi></mml:math></inline-formula> axis or along the easy magnetic axis, and the different character of those transitions has been attributed to specific features in the magnetic anisotropy.</p>
+</abstract>
+<funding-group>
+<award-group award-type="contract">
+<funding-source>
+<named-content content-type="name">Ministerio de Economía y Competitividad</named-content>
+<named-content content-type="fundref:id">http://dx.doi.org/10.13039/501100003329</named-content>
+<named-content content-type="fundref:alternate-name">Ministry of Economy and Competitiveness</named-content>
+<named-content content-type="fundref:alternate-name">MINECO</named-content>
+<named-content content-type="country">http://sws.geonames.org/2510769/</named-content>
+</funding-source>
+<award-id>MAT2015-68760-C2-2-P</award-id>
+<award-id>MAT2015-66441-P</award-id>
+<award-id>MAT2017-85232-R</award-id>
+</award-group>
+<award-group award-type="contract">
+<funding-source>
+<named-content content-type="name">Chinese Academy of Sciences</named-content>
+<named-content content-type="fundref:id">http://dx.doi.org/10.13039/501100002367</named-content>
+<named-content content-type="fundref:alternate-name">CAS</named-content>
+<named-content content-type="country">http://sws.geonames.org/1814991/</named-content>
+</funding-source>
+<award-id/>
+</award-group>
+</funding-group>
+<counts>
+<page-count count="10"/>
+</counts>
+</article-meta>
+</front>
+<body>[Removed]</body>
+<back>
+<ack>
+<title>ACKNOWLEDGMENTS</title>
+<p>We acknowledge support from the Institute Laue Langevin (Grenoble) for the neutron-diffraction experiments and support from HLD at HZDR, a member of the European Magnetic Field Laboratory, for the high magnetic field experiments. Financial support from the Spanish Ministry of Economy and Competitiveness, through Projects No. MAT2015-68760-C2-2-P and MAT2015-66441-P (cofunded by ERDF of European Union) and No. MAT2017-85232-R, and the Severo Ochoa Programme for Centres of Excellence in R&amp;G (Project No. SEV-2015-0496) is also acknowledged. This paper was partially supported by the Russian Scientific Foundation (Project No. 16-12-10531). Z.W. acknowledges support from the Chinese Academy of Sciences via the One-Hundred Talent program.</p>
+</ack>
+<ref-list>
+<title>REFERENCES</title>
+<ref id="c1"><label>[1]</label><mixed-citation publication-type="journal"><object-id>1</object-id><person-group person-group-type="author"><string-name>T. Kimura</string-name>, <string-name>T. Goto</string-name>, <string-name>H. Shintani</string-name>, <string-name>K. Ishizaka</string-name>, <string-name>T. Arima</string-name>, and <string-name>Y. Tokura</string-name></person-group>, <source>Nature (London)</source> <volume>426</volume>, <page-range>55</page-range> (<year>2003</year>).<pub-id pub-id-type="coden">NATUAS</pub-id><issn>0028-0836</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1038/nature02018</pub-id></mixed-citation>
+</ref>
+<ref id="c2"><label>[2]</label><mixed-citation publication-type="journal"><object-id>2</object-id><person-group person-group-type="author"><string-name>S. W. Cheong</string-name> and <string-name>M. Mostovoy</string-name></person-group>, <source>Nat. Mater.</source> <volume>6</volume>, <page-range>13</page-range> (<year>2007</year>).<issn>1476-1122</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1038/nmat1804</pub-id></mixed-citation>
+</ref>
+<ref id="c3"><label>[3]</label><mixed-citation publication-type="journal"><object-id>3</object-id><person-group person-group-type="author"><string-name>H. Katsura</string-name>, <string-name>N. Nagaosa</string-name>, and <string-name>A. V. Balatsky</string-name></person-group>, <source>Phys. Rev. Lett.</source> <volume>95</volume>, <page-range>057205</page-range> (<year>2005</year>).<pub-id pub-id-type="coden">PRLTAO</pub-id><issn>0031-9007</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1103/PhysRevLett.95.057205</pub-id></mixed-citation>
+</ref>
+<ref id="c4"><label>[4]</label><mixed-citation publication-type="journal"><object-id>4</object-id><person-group person-group-type="author"><string-name>K. Taniguchi</string-name>, <string-name>N. Abe</string-name>, <string-name>T. Takenobu</string-name>, <string-name>Y. Iwasa</string-name>, and <string-name>T. Arima</string-name></person-group>, <source>Phys. Rev. Lett.</source> <volume>97</volume>, <page-range>097203</page-range> (<year>2006</year>).<pub-id pub-id-type="coden">PRLTAO</pub-id><issn>0031-9007</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1103/PhysRevLett.97.097203</pub-id></mixed-citation>
+</ref>
+<ref id="c5"><label>[5]</label><mixed-citation publication-type="journal"><object-id>5</object-id><person-group person-group-type="author"><string-name>A. H. Arkenbout</string-name>, <string-name>T. T. M. Palstra</string-name>, <string-name>T. Siegrist</string-name>, and <string-name>T. Kimura</string-name></person-group>, <source>Phys. Rev. B</source> <volume>74</volume>, <page-range>184431</page-range> (<year>2006</year>).<pub-id pub-id-type="coden">PRBMDO</pub-id><issn>1098-0121</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1103/PhysRevB.74.184431</pub-id></mixed-citation>
+</ref>
+<ref id="c6"><label>[6]</label><mixed-citation publication-type="journal"><object-id>6</object-id><person-group person-group-type="author"><string-name>Y.-S. Song</string-name>, <string-name>J.-H. Chung</string-name>, <string-name>J. M. S. Park</string-name>, and <string-name>Y.-N. Choi</string-name></person-group>, <source>Phys. Rev. B</source> <volume>79</volume>, <page-range>224415</page-range> (<year>2009</year>).<pub-id pub-id-type="coden">PRBMDO</pub-id><issn>1098-0121</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1103/PhysRevB.79.224415</pub-id></mixed-citation>
+</ref>
+<ref id="c7"><label>[7]</label><mixed-citation publication-type="journal"><object-id>7</object-id><person-group person-group-type="author"><string-name>F. Ye</string-name>, <string-name>S. X. Chi</string-name>, <string-name>J. A. Fernandez-Baca</string-name>, <string-name>H. B. Cao</string-name>, <string-name>K. C. Liang</string-name>, <string-name>Y. Q. Wang</string-name>, <string-name>B. Lorenz</string-name>, and <string-name>C. W. Chu</string-name></person-group>, <source>Phys. Rev. B</source> <volume>86</volume>, <page-range>094429</page-range> (<year>2012</year>).<pub-id pub-id-type="coden">PRBMDO</pub-id><issn>1098-0121</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1103/PhysRevB.86.094429</pub-id></mixed-citation>
+</ref>
+<ref id="c8"><label>[8]</label><mixed-citation publication-type="journal"><object-id>8</object-id><person-group person-group-type="author"><string-name>K.-C. Liang</string-name>, <string-name>R. P. Chaudhury</string-name>, <string-name>Y. Q. Wang</string-name>, <string-name>Y. Y. Sun</string-name>, <string-name>B. Lorenz</string-name>, and <string-name>C. W. Chu</string-name></person-group>, <source>J. Appl. Phys.</source> <volume>111</volume>, <page-range>07D903</page-range> (<year>2012</year>).<pub-id pub-id-type="coden">JAPIAU</pub-id><issn>0021-8979</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1063/1.3671419</pub-id></mixed-citation>
+</ref>
+<ref id="c9"><label>[9]</label><mixed-citation publication-type="journal"><object-id>9</object-id><person-group person-group-type="author"><string-name>N. Leo</string-name>, <string-name>A. Bergman</string-name>, <string-name>A. Cano</string-name>, <string-name>N. Poudel</string-name>, <string-name>B. Lorenz</string-name>, <string-name>M. Fiebig</string-name>, and <string-name>D. Meier</string-name></person-group>, <source>Nat. Commun.</source> <volume>6</volume>, <page-range>6661</page-range> (<year>2015</year>).<issn>2041-1723</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1038/ncomms7661</pub-id></mixed-citation>
+</ref>
+<ref id="c10"><label>[10]</label><mixed-citation publication-type="journal"><object-id>10</object-id><person-group person-group-type="author"><string-name>I. Urcelay-Olabarria</string-name>, <string-name>J. L. García-Muñoz</string-name>, <string-name>E. Ressouche</string-name>, <string-name>V. Skumryev</string-name>, <string-name>V. Yu. Ivanov</string-name>, <string-name>A. A. Mukhin</string-name>, and <string-name>A. M. Balbashov</string-name></person-group>, <source>Phys. Rev. B</source> <volume>86</volume>, <page-range>184412</page-range> (<year>2012</year>).<pub-id pub-id-type="coden">PRBMDO</pub-id><issn>1098-0121</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1103/PhysRevB.86.184412</pub-id></mixed-citation>
+</ref>
+<ref id="c11"><label>[11]</label><mixed-citation publication-type="journal"><object-id>11</object-id><person-group person-group-type="author"><string-name>I. Urcelay-Olabarria</string-name>, <string-name>J. M. Perez-Mato</string-name>, <string-name>J. L. Ribeiro</string-name>, <string-name>J. L. García-Muñoz</string-name>, <string-name>E. Ressouche</string-name>, <string-name>V. Skumryev</string-name>, and <string-name>A. A. Mukhin</string-name></person-group>, <source>Phys. Rev. B</source> <volume>87</volume>, <page-range>014419</page-range> (<year>2013</year>).<pub-id pub-id-type="coden">PRBMDO</pub-id><issn>1098-0121</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1103/PhysRevB.87.014419</pub-id></mixed-citation>
+</ref>
+<ref id="c12"><label>[12]</label><mixed-citation publication-type="journal"><object-id>12</object-id><person-group person-group-type="author"><string-name>I. A. Sergienko</string-name> and <string-name>E. Dagotto</string-name></person-group>, <source>Phys. Rev. B</source> <volume>73</volume>, <page-range>094434</page-range> (<year>2006</year>).<pub-id pub-id-type="coden">PRBMDO</pub-id><issn>1098-0121</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1103/PhysRevB.73.094434</pub-id></mixed-citation>
+</ref>
+<ref id="c13"><label>[13]</label><mixed-citation publication-type="journal"><object-id>13</object-id><person-group person-group-type="author"><string-name>M. Mostovoy</string-name></person-group>, <source>Phys. Rev. Lett.</source> <volume>96</volume>, <page-range>067601</page-range> (<year>2006</year>).<pub-id pub-id-type="coden">PRLTAO</pub-id><issn>0031-9007</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1103/PhysRevLett.96.067601</pub-id></mixed-citation>
+</ref>
+<ref id="c14"><label>[14]</label><mixed-citation publication-type="journal"><object-id>14</object-id><person-group person-group-type="author"><string-name>A. M. Balbashov</string-name> and <string-name>S. G. Egorov</string-name></person-group>, <source>J. Cryst. Growth</source> <volume>52</volume>, <page-range>498</page-range> (<year>1981</year>).<pub-id pub-id-type="coden">JCRGAE</pub-id><issn>0022-0248</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1016/0022-0248(81)90328-6</pub-id></mixed-citation></ref>
+<ref id="c15"><label>[15]</label><mixed-citation publication-type="journal"><object-id>15</object-id><person-group person-group-type="author"><string-name>H. Mitamura</string-name>, <string-name>S. Mitsuda</string-name>, <string-name>S. Kanetsuki</string-name>, <string-name>H. A. Katori</string-name>, <string-name>T. Sakakibara</string-name>, and <string-name>K. Kindo</string-name></person-group>, <source>J. Phys.: Conf. Ser.</source> <volume>51</volume>, <page-range>557</page-range> (<year>2006</year>).<issn>1742-6588</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1088/1742-6596/51/1/126</pub-id></mixed-citation>
+</ref>
+<ref id="c16"><label>[16]</label><mixed-citation publication-type="misc"><object-id>16</object-id><person-group person-group-type="author"><string-name>J. Brown</string-name> and <string-name>J. Matthewman</string-name></person-group>, Cambridge Crystallography Subroutine Library Report No. RAL93-009, <year>1993</year>.</mixed-citation>
+</ref>
+<ref id="c17"><label>[17]</label><mixed-citation publication-type="journal"><object-id>17</object-id><person-group person-group-type="author"><string-name>J. Rodriguez-Carvajal</string-name></person-group>, <source>Physica B (Amsterdam)</source> <volume>192</volume>, <page-range>55</page-range> (<year>1993</year>).<pub-id pub-id-type="coden">PHYBE3</pub-id><issn>0921-4526</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1016/0921-4526(93)90108-I</pub-id></mixed-citation>
+</ref>
+<ref id="c18"><label>[18]</label><mixed-citation publication-type="journal"><object-id>18</object-id><person-group person-group-type="author"><string-name>P. J. Becker</string-name> and <string-name>P. Coppens</string-name></person-group>, <source>Acta Crystallogr. A</source> <volume>30</volume>, <page-range>129</page-range> (<year>1974</year>).<pub-id pub-id-type="doi" specific-use="suppress-display">10.1107/S0567739474000337</pub-id></mixed-citation>
+</ref>
+<ref id="c19"><label>[19]</label><mixed-citation publication-type="misc"><object-id>19</object-id>The fine details of the structure coming from relativistic interactions are not presented, because they do not provide additional information to understand the evolution of the magnetic structure under magnetic field.</mixed-citation>
+</ref>
+<ref id="c20"><label>[20]</label><mixed-citation publication-type="supplemental-material"><object-id>20</object-id>See Supplemental Material at <ext-link ext-link-type="uri" xlink:href="http://link.aps.org/supplemental/10.1103/PhysRevB.96.104435">http://link.aps.org/supplemental/10.1103/PhysRevB.96.104435</ext-link> for agreement plots of the refinements of the magnetic structures under magnetic field applied along the crystallographic <inline-formula><mml:math><mml:mi>b</mml:mi></mml:math></inline-formula> axis.</mixed-citation>
+</ref>
+<ref id="c21"><label>[21]</label><mixed-citation publication-type="journal"><object-id>21</object-id><person-group person-group-type="author"><string-name>H. Mitamura</string-name>, <string-name>T. Sakakibara</string-name>, <string-name>H. Nakamura</string-name>, <string-name>T. Kimura</string-name>, and <string-name>K. Kindo</string-name></person-group>, <source>J. Phys. Soc. Jpn.</source> <volume>81</volume>, <page-range>054705</page-range> (<year>2012</year>).<pub-id pub-id-type="coden">JUPSAU</pub-id><issn>0031-9015</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1143/JPSJ.81.054705</pub-id></mixed-citation>
+</ref>
+<ref id="c22"><label>[22]</label><mixed-citation publication-type="journal"><object-id>22</object-id><person-group person-group-type="author"><string-name>G. Quirion</string-name> and <string-name>M. L. Plumer</string-name></person-group>, <source>Phys. Rev. B</source> <volume>87</volume>, <page-range>174428</page-range> (<year>2013</year>).<pub-id pub-id-type="coden">PRBMDO</pub-id><issn>1098-0121</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1103/PhysRevB.87.174428</pub-id></mixed-citation>
+</ref>
+<ref id="c23"><label>[23]</label><mixed-citation publication-type="journal"><object-id>23</object-id><person-group person-group-type="author"><string-name>N. V. Ter-Oganessian</string-name> and <string-name>V. P. Sakhnenko</string-name></person-group>, <source>J. Phys.: Condens. Matter</source> <volume>26</volume>, <page-range>036003</page-range> (<year>2014</year>).<pub-id pub-id-type="coden">JCOMEL</pub-id><issn>0953-8984</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1088/0953-8984/26/3/036003</pub-id></mixed-citation>
+</ref>
+<ref id="c24"><label>[24]</label><mixed-citation publication-type="journal"><object-id>24</object-id><person-group person-group-type="author"><string-name>M. V. Gvozdikova</string-name>, <string-name>T. Ziman</string-name>, and <string-name>M. E. Zhitomirsky</string-name></person-group>, <source>Phys. Rev. B</source> <volume>94</volume>, <page-range>020406</page-range>(R) (<year>2016</year>).<issn>1098-0121</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1103/PhysRevB.94.020406</pub-id></mixed-citation>
+</ref>
+<ref id="c25"><label>[25]</label><mixed-citation publication-type="journal"><object-id>25</object-id><person-group person-group-type="author"><string-name>J. Herrero-Martín</string-name>, <string-name>A. N. Dobrynin</string-name>, <string-name>C. Mazzoli</string-name>, <string-name>P. Steadman</string-name>, <string-name>P. Bencok</string-name>, <string-name>R. Fan</string-name>, <string-name>A. A. Mukhin</string-name>, <string-name>V. Skumryev</string-name>, and <string-name>J. L. García-Muñoz</string-name></person-group>, <source>Phys. Rev. B</source> <volume>91</volume>, <page-range>220403</page-range>(R) (<year>2015</year>).<pub-id pub-id-type="coden">PRBMDO</pub-id><issn>1098-0121</issn><pub-id pub-id-type="doi" specific-use="suppress-display">10.1103/PhysRevB.91.220403</pub-id></mixed-citation>
+</ref>
+<ref id="c26"><label>[26]</label>
+<mixed-citation id="c26a" publication-type="journal"><object-id>26a</object-id><person-group person-group-type="author"><string-name>E. V. Sinitsyn</string-name> and <string-name>I. G. Bostrem</string-name></person-group>, <source>Zh. Eksp. Teor. Fiz.</source> <volume>85</volume>, <page-range>661</page-range> (<year>1983</year>)</mixed-citation>
+<mixed-citation id="c26b" publication-type="journal" specific-use="translation"><object-id>26b</object-id><person-group person-group-type="author"><string-name>E. V. Sinitsyn</string-name> and <string-name>I. G. Bostrem</string-name></person-group>, [<source>Sov. Phys. JETP</source> <volume>58</volume>, <page-range>385</page-range> (<year>1983</year>)].</mixed-citation>
+</ref>
+<ref id="c27"><label>[27]</label>
+<mixed-citation id="c27a" publication-type="journal"><object-id>27a</object-id><person-group person-group-type="author"><string-name>V. N. Milov</string-name>, <string-name>G. G. Artem'ev</string-name>, <string-name>V. I. Nedel'ko</string-name>, <string-name>A. F. Prun</string-name>, <string-name>M. V. Semenova</string-name>, and <string-name>E. V. Sinitsyn</string-name></person-group>, <source>Zh. Eksp. Teor. Fiz.</source> <volume>88</volume>, <page-range>272</page-range> (<year>1985</year>)</mixed-citation>
+<mixed-citation id="c27b" publication-type="journal" specific-use="translation"><object-id>27b</object-id><person-group person-group-type="author"><string-name>V. N. Milov</string-name>, <string-name>G. G. Artem'ev</string-name>, <string-name>V. I. Nedel'ko</string-name>, <string-name>A. F. Prun</string-name>, <string-name>M. V. Semenova</string-name>, and <string-name>E. V. Sinitsyn</string-name></person-group>, [<source>Sov. Phys. JETP</source> <volume>61</volume>, <page-range>159</page-range> (<year>1985</year>)].</mixed-citation>
+</ref>
+</ref-list>
+</back>
+</article>

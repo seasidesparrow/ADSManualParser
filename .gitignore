@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+logs/
+data/
+
+secrets/
+
+.venv
+venv/
+
+.coverage
