@@ -69,7 +69,7 @@ def main():
         infiles = glob(args.proc_path+'/*')
         for f in infiles:
             try:
-                with open(f, 'rb') as fin:
+                with open(f, 'r') as fin:
                     output = {'data': fin.read(),
                               'type': args.file_type}
                     rawDataList.append(output)
@@ -88,13 +88,17 @@ def main():
 
     # Now process whatever raw records you have
     for rec in rawDataList:
-        parser = PARSER_TYPES.get(rec.get('type', None), None)
+        pdata = rec.get('data', None)
+        ptype = rec.get('type', None)
+        parser = PARSER_TYPES.get(ptype, None)
         if parser:
             try:
-                ingestDocList.append(parser.parse(rec.get('data', None)))
+                ingestDocList.append(parser.parse(pdata))
             except Exception as err:
+                print('well fml...', err)
                 logger.warning("Error parsing record: %s" % err)
         else:
+            print('parser not defined')
             logger.error("No parser available for file_type '%s'." % args.file_type)
 
 
