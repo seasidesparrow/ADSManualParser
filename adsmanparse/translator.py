@@ -239,9 +239,9 @@ class Translator(object):
                 pagerange = firstp + '-' + lastp
             if pagerange:
                 if pubstring:
-                    pubstring = pubstring + ', pp.' + pagerange
+                    pubstring = pubstring + ', pp. ' + pagerange
                 else:
-                    pubstring = 'pp.' + pagerange
+                    pubstring = 'pp. ' + pagerange
             elif idno:
                 if pubstring:
                     pubstring = pubstring + ', id.' + idno
@@ -272,4 +272,4 @@ class Translator(object):
             self._get_references()
             self._get_properties()
             self._get_publication()
-            self._get_bibcode(bibstem=bibstem)
+            # self._get_bibcode(bibstem=bibstem)
