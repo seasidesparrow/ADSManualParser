@@ -115,17 +115,17 @@ def main():
                     print('export to tagged file failed: %s' % err)
 
 
-
-
-    # Plos ONE example from Habanero docs
-    # doi = '10.1371/journal.pone.0033693'
-
-    # MDPI Galaxies -- has abstract
-    # doi = '10.3390/galaxies9040111'
-
-    # PNAS volume 1 paper (1915)
-    # doi = '10.1073/pnas.1.1.51'
-
 if __name__ == '__main__':
     main()
+
+
+
+# Plos ONE example from Habanero docs
+# doi = '10.1371/journal.pone.0033693'
+
+# MDPI Galaxies -- has abstract
+# doi = '10.3390/galaxies9040111'
+
+# PNAS volume 1 paper (1915)
+# doi = '10.1073/pnas.1.1.51'
 
