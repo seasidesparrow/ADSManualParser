@@ -172,9 +172,36 @@ class Translator(object):
 
     def _get_date(self):
         pubdate = self.data.get('pubDate', None)
-        date = pubdate.get('printDate', None)
-        if not date:
-            date = pubdate.get('electrDate', None)
+
+        # what dates are available?
+        printdate = pubdate.get('printDate', None)
+        elecdate = pubdate.get('electrDate', None)
+        otherdate = pubdate.get('otherDate', None)
+
+        if printdate:
+            if len(printdate) <= 4:
+                printdate = None
+        elif elecdate:
+            if len(elecdate) <= 4:
+                elecdate = None
+        elif otherdate:
+            odate = None
+            for od in otherdate:
+                if od.get('otherDateType', None) == 'Available':
+                    odate = od.get('otherDateValue', None)
+            if odate:
+                otherdate = odate
+
+        # choose a pubdate based on what's available (or not)
+        date = None
+        if printdate:
+            date = printdate
+        elif elecdate:
+            date = elecdate
+        elif otherdate:
+            date = otherdate
+
+        # if a date string was found, parse it to make output[pubdate]
         if date:
             try:
                 (y,m,d) = date.split('-')
