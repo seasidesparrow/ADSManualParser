@@ -14,13 +14,11 @@ for f in inputFiles:
             rawData = fh.read()
         parser = DataciteParser()
         ingestRecord = parser.parse(rawData)
-        # print(json.dumps(ingestRecord, indent=2))
         xlator = Translator(data=ingestRecord)
         xlator.translate(bibstem='MPEC')
     except Exception as err:
-        print('There was a problem: %s' % err)
+        print('There was a problem with %s: %s' % (f, err))
     else:
-        print('what the hell?',xlator.output)
         try:
             lol = Tagged()
             lol.write(xlator.output, fout)

@@ -5,12 +5,13 @@ from adsingestp.parsers.crossref import CrossrefParser
 from adsingestp.parsers.jats import JATSParser
 from adsingestp.parsers.datacite import DataciteParser
 from adsputils import setup_logging
-from glob import glob
+from glob import iglob
 from pyingest.serializers.classic import Tagged
 
 PARSER_TYPES = {'jats': JATSParser(),
                 'dc': DataciteParser(),
-                'cr': CrossrefParser()
+                'cr': CrossrefParser(),
+                'nlm': JATSParser()
                }
 
 logger = setup_logging('logs')
@@ -66,11 +67,12 @@ def main():
 
     # This route processes data from user-input files
     if args.proc_path:
-        infiles = glob(args.proc_path+'/*')
+        infiles = iglob(args.proc_path)
         for f in infiles:
             try:
                 with open(f, 'r') as fin:
                     output = {'data': fin.read(),
+                              'name': f,
                               'type': args.file_type}
                     rawDataList.append(output)
             except Exception as err:
@@ -90,10 +92,15 @@ def main():
     for rec in rawDataList:
         pdata = rec.get('data', None)
         ptype = rec.get('type', None)
+        filename = rec.get('name', None)
         parser = PARSER_TYPES.get(ptype, None)
+        print('Input file: %s' % filename)
         if parser:
             try:
-                ingestDocList.append(parser.parse(pdata))
+                if ptype == 'nlm':
+                    ingestDocList.append(parser.parse(pdata, bsparser='lxml-xml'))
+                else:
+                    ingestDocList.append(parser.parse(pdata))
             except Exception as err:
                 print('well fml...', err)
                 logger.warning("Error parsing record: %s" % err)
@@ -107,8 +114,8 @@ def main():
             x = Tagged()
             with open(args.output_file, 'a') as fout:
                 try:
-                    xlator = translator.Translator()
                     for d in ingestDocList:
+                        xlator = translator.Translator()
                         xlator.translate(data=d)
                         x.write(xlator.output, fout)
                 except Exception as err:

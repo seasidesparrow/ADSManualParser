@@ -181,16 +181,19 @@ class Translator(object):
         if printdate:
             if len(printdate) <= 4:
                 printdate = None
-        elif elecdate:
+        if elecdate:
             if len(elecdate) <= 4:
                 elecdate = None
-        elif otherdate:
+        if otherdate:
             odate = None
+            
             for od in otherdate:
                 if od.get('otherDateType', None) == 'Available':
                     odate = od.get('otherDateValue', None)
             if odate:
                 otherdate = odate
+            else:
+                otherdate = None
 
         # choose a pubdate based on what's available (or not)
         date = None
@@ -308,9 +311,9 @@ class Translator(object):
                 if publication:
                     self.data['publication']['volumeNum'] = circular_series
                 if self.data.get('pagination', None):
-                    self.data['pagination']['firstPage'] = circular_page
+                    self.data['pagination']['firstPage'] = str(int(circular_page))
                 else:
-                   self.data['pagination'] = {'firstPage': circular_page}
+                   self.data['pagination'] = {'firstPage': str(int(circular_page))}
                 self.output['publication'] = 'Minor Planet Electronic Circ., No. %s' % circular_number
                 
                   
