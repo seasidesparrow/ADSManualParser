@@ -3,8 +3,7 @@ from adsingestp.parsers.datacite import DataciteParser
 from adsmanparse.translator import Translator
 from pyingest.serializers.classic import Tagged
 
-# infile = "/Users/mtempleton/mpec/MPEC2023-C14-NewObject.xml"
-infile = "/Users/mtempleton/mpec/MPEC2023-C19-DAILYORBITUPDATE.xml"
+infile = '/proj/ads/abstracts/sources/DataCite/doi/10.48377/mpec/2023-f01.xml'
 
 try:
     with open(infile, 'rb') as fh:

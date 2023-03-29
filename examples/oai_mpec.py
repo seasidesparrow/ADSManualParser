@@ -5,7 +5,7 @@ from adsmanparse.translator import Translator
 from glob import glob
 from pyingest.serializers.classic import Tagged
 
-inputFiles = glob('/proj/ads/adstmp/mtemple/mpec_oai_harvester/doi/10.48377/mpec/*')
+inputFiles = glob('/proj/ads/abstracts/sources/DataCite/doi/10.48377/mpec/*')
 
 fout = open('mpec.tagged','a')
 for f in inputFiles:
