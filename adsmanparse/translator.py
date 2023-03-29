@@ -172,9 +172,39 @@ class Translator(object):
 
     def _get_date(self):
         pubdate = self.data.get('pubDate', None)
-        date = pubdate.get('printDate', None)
-        if not date:
-            date = pubdate.get('electrDate', None)
+
+        # what dates are available?
+        printdate = pubdate.get('printDate', None)
+        elecdate = pubdate.get('electrDate', None)
+        otherdate = pubdate.get('otherDate', None)
+
+        if printdate:
+            if len(printdate) <= 4:
+                printdate = None
+        if elecdate:
+            if len(elecdate) <= 4:
+                elecdate = None
+        if otherdate:
+            odate = None
+            
+            for od in otherdate:
+                if od.get('otherDateType', None) == 'Available':
+                    odate = od.get('otherDateValue', None)
+            if odate:
+                otherdate = odate
+            else:
+                otherdate = None
+
+        # choose a pubdate based on what's available (or not)
+        date = None
+        if printdate:
+            date = printdate
+        elif elecdate:
+            date = elecdate
+        elif otherdate:
+            date = otherdate
+
+        # if a date string was found, parse it to make output[pubdate]
         if date:
             try:
                 (y,m,d) = date.split('-')
@@ -205,52 +235,53 @@ class Translator(object):
 
 
     def _get_publication(self):
-        publication = self.data.get('publication', None)
-        pagination = self.data.get('pagination', None)
-        pubstring = None
-        if publication:
-            journal = publication.get('pubName', None)
-            year = publication.get('pubYear', None)
-            volume = publication.get('volumeNum', None)
-            issue = publication.get('issueNum', None)
-            publisher = publication.get('publisher', None)
-            if journal:
-                pubstring = journal
-            if volume:
-                if pubstring:
-                    pubstring = pubstring + ', Volume ' + volume
-                else:
-                    pubstring = 'Volume ' + volume
-            elif publisher:
-                if publisher == 'OUP' or publisher == 'Oxford University Press':
-                    pubstring = pubstring + ', Advance Access'
-            if issue:
-                if pubstring:
-                    pubstring = pubstring + ', Issue ' + issue
-                else:
-                    pubstring = 'Issue ' + issue
-        if pagination:
-            pagerange = pagination.get('pageRange', None)
-            pagecount = pagination.get('pageCount', None)
-            idno = pagination.get('electronicID', None)
-            firstp = pagination.get('firstPage', None)
-            lastp = pagination.get('lastPage', None)
-            if (firstp and lastp) and not pagerange:
-                pagerange = firstp + '-' + lastp
-            if pagerange:
-                if pubstring:
-                    pubstring = pubstring + ', pp. ' + pagerange
-                else:
-                    pubstring = 'pp. ' + pagerange
-            elif idno:
-                if pubstring:
-                    pubstring = pubstring + ', id.' + idno
-                else:
-                    pubstring = 'id.' + idno
-                if pagecount:
-                    pubstring = pubstring + ', ' + pagecount + ' pp.'
-        if pubstring:
-            self.output['publication'] = pubstring
+        if not self.output.get('publication', None):
+            publication = self.data.get('publication', None)
+            pagination = self.data.get('pagination', None)
+            pubstring = None
+            if publication:
+                journal = publication.get('pubName', None)
+                year = publication.get('pubYear', None)
+                volume = publication.get('volumeNum', None)
+                issue = publication.get('issueNum', None)
+                publisher = publication.get('publisher', None)
+                if journal:
+                    pubstring = journal
+                if volume:
+                    if pubstring:
+                        pubstring = pubstring + ', Volume ' + volume
+                    else:
+                        pubstring = 'Volume ' + volume
+                elif publisher:
+                    if publisher == 'OUP' or publisher == 'Oxford University Press':
+                        pubstring = pubstring + ', Advance Access'
+                if issue:
+                    if pubstring:
+                        pubstring = pubstring + ', Issue ' + issue
+                    else:
+                        pubstring = 'Issue ' + issue
+            if pagination:
+                pagerange = pagination.get('pageRange', None)
+                pagecount = pagination.get('pageCount', None)
+                idno = pagination.get('electronicID', None)
+                firstp = pagination.get('firstPage', None)
+                lastp = pagination.get('lastPage', None)
+                if (firstp and lastp) and not pagerange:
+                    pagerange = firstp + '-' + lastp
+                if pagerange:
+                    if pubstring:
+                        pubstring = pubstring + ', pp. ' + pagerange
+                    else:
+                        pubstring = 'pp. ' + pagerange
+                elif idno:
+                    if pubstring:
+                        pubstring = pubstring + ', id.' + idno
+                    else:
+                        pubstring = 'id.' + idno
+                    if pagecount:
+                        pubstring = pubstring + ', ' + pagecount + ' pp.'
+            if pubstring:
+                self.output['publication'] = pubstring
 
     def _get_bibcode(self, bibstem=None):
         try:
@@ -258,12 +289,57 @@ class Translator(object):
         except Exception as err:
             print('Couldnt make a bibcode: %s' % str(err))
 
+
+    def _special_handling(self, bibstem=None):
+        # Special data handling rules on a per-bibstem basis
+        if bibstem == 'MPEC':
+            # To do:
+            #	- reparse title into Circular no. and title
+            #	- remove MPC Staff as author
+            #	- add all otherContributor.DataCollector as author(s)
+            #   - delete abstract
+            #   - create the output publication (%J) field
+            
+            if self.data.get('title', {}).get('textEnglish', None):
+                (circular_number, circular_title) = self.data.get('title', {}).get('textEnglish').split(':')
+                circular_number = circular_number.replace('MPEC ','').strip()
+                circular_issue = circular_number.split('-')[1]
+                (circular_series, circular_page) = re.split(r'(\D+)', circular_issue)[1:]
+                circular_title = circular_title.strip()
+                self.data['title']['textEnglish'] = circular_title
+                publication = self.data.get('publication', None)
+                if publication:
+                    self.data['publication']['volumeNum'] = circular_series
+                if self.data.get('pagination', None):
+                    self.data['pagination']['firstPage'] = str(int(circular_page))
+                else:
+                   self.data['pagination'] = {'firstPage': str(int(circular_page))}
+                self.output['publication'] = 'Minor Planet Electronic Circ., No. %s' % circular_number
+                
+                  
+            if self.data.get('abstract', None):
+                self.data['abstract'] = None
+
+            new_authors = []
+            for a in self.data.get('authors', []):
+                pubraw = a.get('name', {}).get('pubraw', None)
+                if pubraw:
+                    if pubraw != 'Minor Planet Center Staff':
+                        new_authors.append(a)
+            for a in self.data.get('otherContributor', []):
+                if a.get('contrib', {}):
+                    new_authors.append(a['contrib'])
+            self.data['authors'] = new_authors
+                   
+
     def translate(self, data=None, publisher=None, bibstem=None):
         if data:
             self.data = data
         if not self.data:
             raise NoParsedDataException('You need to supply data to translate!')
         else:
+            if bibstem:
+                self._special_handling(bibstem)
             self._get_title()
             self._get_abstract()
             self._get_keywords()
@@ -272,4 +348,4 @@ class Translator(object):
             self._get_references()
             self._get_properties()
             self._get_publication()
-            # self._get_bibcode(bibstem=bibstem)
+            self._get_bibcode(bibstem=bibstem)
