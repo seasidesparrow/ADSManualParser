@@ -124,10 +124,8 @@ def main():
                 else:
                     ingestDocList.append(parser.parse(pdata))
             except Exception as err:
-                print('well fml...', err)
                 logger.warning("Error parsing record: %s" % err)
         else:
-            print('parser not defined')
             logger.error("No parser available for file_type '%s'." % args.file_type)
 
 
@@ -141,7 +139,7 @@ def main():
                         xlator.translate(data=d)
                         x.write(xlator.output, fout)
                 except Exception as err:
-                    print('export to tagged file failed: %s' % err)
+                    logger.warning("Export to tagged file failed: %s\t%s" % (err, d))
 
 
 if __name__ == '__main__':

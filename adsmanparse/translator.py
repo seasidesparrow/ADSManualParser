@@ -266,7 +266,6 @@ class Translator(object):
                 idno = pagination.get('electronicID', None)
                 firstp = pagination.get('firstPage', None)
                 lastp = pagination.get('lastPage', None)
-                print('lol idno: %s\tfirstp: %s\tlastp: %s' % (idno, firstp, lastp))
                 if (firstp and lastp) and not pagerange:
                     pagerange = firstp + '-' + lastp
                 if pagerange:
