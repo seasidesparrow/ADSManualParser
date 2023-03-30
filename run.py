@@ -34,6 +34,13 @@ def get_args():
                         default=None,
                         help='DOI to fetch')
 
+    parser.add_argument('-l',
+                        '--doi-list',
+                        dest='fetch_doi_list',
+                        action='store',
+                        default=None,
+                        help='Path to a file containing a list of DOIs, one per line')
+
     parser.add_argument('-f',
                         '--outfile',
                         dest='output_file',
@@ -87,6 +94,21 @@ def main():
             rawDataList.append(output)
         except Exception as err:
             logger.warning("Failed to fetch DOI %s: %s" % (args.fetch_doi,err))
+
+    elif args.fetch_doi_list:
+        try:
+            with open(args.fetch_doi_list, 'r') as fin:
+                for l in fin.readlines():
+                    fetch_doi = l.strip()
+                    try:
+                        getdoi = doiharvest.DoiHarvester(doi=fetch_doi)
+                        output = {'data': getdoi.get_record(),
+                                  'type': 'cr'}
+                        rawDataList.append(output)
+                    except Exception as err:
+                        logger.warning("Failed to fetch DOI %s: %s" % (fetch_doi,err))
+        except Exception as err:
+            logger.error("Failed to read %s: %s" % (args.fetch_doi_list, err))
 
     # Now process whatever raw records you have
     for rec in rawDataList:
