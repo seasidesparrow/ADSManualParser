@@ -273,13 +273,16 @@ class Translator(object):
                         pubstring = pubstring + ', pp. ' + pagerange
                     else:
                         pubstring = 'pp. ' + pagerange
+                elif firstp:
+                    if pubstring:
+                        pubstring = pubstring + ', page ' + firstp
                 elif idno:
                     if pubstring:
                         pubstring = pubstring + ', id.' + idno
                     else:
                         pubstring = 'id.' + idno
-                    if pagecount:
-                        pubstring = pubstring + ', ' + pagecount + ' pp.'
+                if pagecount:
+                    pubstring = pubstring + ', ' + pagecount + ' pp.'
             if pubstring:
                 self.output['publication'] = pubstring
 
