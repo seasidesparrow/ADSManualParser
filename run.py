@@ -100,6 +100,8 @@ def main():
             with open(args.fetch_doi_list, 'r') as fin:
                 for l in fin.readlines():
                     fetch_doi = l.strip()
+                    getdoi = None
+                    output = None
                     try:
                         getdoi = doiharvest.DoiHarvester(doi=fetch_doi)
                         output = {'data': getdoi.get_record(),
@@ -119,6 +121,7 @@ def main():
         print('Input file: %s' % filename)
         if parser:
             try:
+                parser.__init__()
                 if ptype == 'nlm':
                     ingestDocList.append(parser.parse(pdata, bsparser='lxml-xml'))
                 else:
@@ -136,7 +139,7 @@ def main():
                 try:
                     for d in ingestDocList:
                         xlator = translator.Translator()
-                        xlator.translate(data=d)
+                        xlator.translate(data=d, bibstem=args.bibstem)
                         x.write(xlator.output, fout)
                 except Exception as err:
                     logger.warning("Export to tagged file failed: %s\t%s" % (err, d))
