@@ -1,11 +1,11 @@
 __pycache__/
 *.py[cod]
+local_config.py
+.coverage
+
 logs/
 data/
-
 secrets/
-
-.venv/
+cleanup/
 venv/
-
-.coverage
+.venv/
