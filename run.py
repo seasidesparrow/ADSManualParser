@@ -14,7 +14,7 @@ PARSER_TYPES = {'jats': JATSParser(),
                 'nlm': JATSParser()
                }
 
-logger = setup_logging('logs')
+logger = setup_logging('manual-parser')
 
 def get_args():
 
@@ -74,7 +74,7 @@ def main():
 
     # This route processes data from user-input files
     if args.proc_path:
-        infiles = iglob(args.proc_path)
+        infiles = iglob(args.proc_path, recursive=True)
         for f in infiles:
             try:
                 with open(f, 'r') as fin:
@@ -118,7 +118,6 @@ def main():
         ptype = rec.get('type', None)
         filename = rec.get('name', None)
         parser = PARSER_TYPES.get(ptype, None)
-        print('Input file: %s' % filename)
         if parser:
             try:
                 parser.__init__()
@@ -127,7 +126,7 @@ def main():
                 else:
                     ingestDocList.append(parser.parse(pdata))
             except Exception as err:
-                logger.warning("Error parsing record: %s" % err)
+                logger.warning("Error parsing record (%s): %s" % (filename,err))
         else:
             logger.error("No parser available for file_type '%s'." % args.file_type)
 
@@ -136,13 +135,13 @@ def main():
         if args.output_file:
             x = Tagged()
             with open(args.output_file, 'a') as fout:
-                try:
-                    for d in ingestDocList:
+                for d in ingestDocList:
+                    try:
                         xlator = translator.Translator()
                         xlator.translate(data=d, bibstem=args.bibstem)
                         x.write(xlator.output, fout)
-                except Exception as err:
-                    logger.warning("Export to tagged file failed: %s\t%s" % (err, d))
+                    except Exception as err:
+                        logger.warning("Export to tagged file failed: %s\t%s" % (err, d))
 
 
 if __name__ == '__main__':
