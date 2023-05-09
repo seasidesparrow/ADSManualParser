@@ -5,6 +5,7 @@ from adsingestp.parsers.crossref import CrossrefParser
 from adsingestp.parsers.jats import JATSParser
 from adsingestp.parsers.datacite import DataciteParser
 from adsputils import setup_logging
+from datetime import datetime
 from glob import iglob
 from pyingest.serializers.classic import Tagged
 
@@ -49,11 +50,18 @@ def get_args():
                         help='File that tagged format will be written to')
 
     parser.add_argument('-p',
-                      '--proc_path',
-                      dest='proc_path',
-                      action='store',
-                      default=None,
-                      help='Path to files or list of files')
+                        '--proc_path',
+                        dest='proc_path',
+                        action='store',
+                        default=None,
+                        help='Path to files or list of files')
+
+    parser.add_argument('-a',
+                        '--age',
+                        dest='proc_since',
+                        action='store',
+                        default=None,
+                        help='Age (in days) of oldest files in --proc_path to process')
 
     parser.add_argument('-t',
                         '--file_type',
@@ -75,6 +83,9 @@ def main():
     # This route processes data from user-input files
     if args.proc_path:
         infiles = iglob(args.proc_path, recursive=True)
+        if infiles and args.proc_since:
+            infiles_since = [x for x in infiles where ((datetime.today() - datetime.fromtimestamp(os.path.getmtime(x))) <= args.proc_since)]
+            infiles = infiles_since
         for f in infiles:
             try:
                 with open(f, 'r') as fin:
