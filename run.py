@@ -1,11 +1,12 @@
 import argparse
 import json
+import os
 from adsmanparse import translator, doiharvest
 from adsingestp.parsers.crossref import CrossrefParser
 from adsingestp.parsers.jats import JATSParser
 from adsingestp.parsers.datacite import DataciteParser
 from adsputils import setup_logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from glob import iglob
 from pyingest.serializers.classic import Tagged
 
@@ -84,7 +85,9 @@ def main():
     if args.proc_path:
         infiles = iglob(args.proc_path, recursive=True)
         if infiles and args.proc_since:
-            infiles_since = [x for x in infiles where ((datetime.today() - datetime.fromtimestamp(os.path.getmtime(x))) <= args.proc_since)]
+            dtime = timedelta(days=int(args.proc_since))
+            today = datetime.today()
+            infiles_since = [x for x in infiles if (today - datetime.fromtimestamp(os.path.getmtime(x))) <= dtime)]
             infiles = infiles_since
         for f in infiles:
             try:
