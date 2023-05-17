@@ -87,7 +87,7 @@ def main():
         if infiles and args.proc_since:
             dtime = timedelta(days=int(args.proc_since))
             today = datetime.today()
-            infiles_since = [x for x in infiles if (today - datetime.fromtimestamp(os.path.getmtime(x))) <= dtime)]
+            infiles_since = [x for x in infiles if ((today - datetime.fromtimestamp(os.path.getmtime(x))) <= dtime)]
             infiles = infiles_since
         for f in infiles:
             try:
