@@ -223,6 +223,10 @@ class Translator(object):
                 doi = i.get('DOI', None)
                 if doi:
                     props['DOI'] = doi
+        openaccess = self.data.get('openAccess', {}).get('open', False)
+        if openaccess:
+            props['OPEN'] = 1
+            
         if props:
             self.output['properties'] = props
         pass
