@@ -1,4 +1,4 @@
-git+https://github.com/adsabs/ADSIngestParser.git@v0.9.4
+git+https://github.com/adsabs/ADSIngestParser.git@v0.9.5
 git+https://github.com/adsabs/ADSIngestEnrichment.git@v0.1.6
 git+https://github.com/adsabs/ADSPipelineUtils.git@v1.4.3
 git+https://github.com/adsabs/adsabs-pyingest.git@v1.2.2

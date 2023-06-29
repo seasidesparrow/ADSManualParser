@@ -78,8 +78,8 @@ class Translator(object):
     # INDIVIDUAL NAME
     def _get_name(self, name):
         surname = name.get('surname', None)
-        given_name = name.get('given-name', None)
-        middle_name = name.get('middle-name', None)
+        given_name = name.get('given_name', None)
+        middle_name = name.get('middle_name', None)
         pubraw = name.get('pubraw', None)
         collab = name.get('collab', None)
         outname = None
