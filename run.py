@@ -5,6 +5,7 @@ from adsmanparse import translator, doiharvest
 from adsingestp.parsers.crossref import CrossrefParser
 from adsingestp.parsers.jats import JATSParser
 from adsingestp.parsers.datacite import DataciteParser
+from adsingestp.parsers.elsevier import ElsevierParser
 from adsputils import setup_logging
 from datetime import datetime, timedelta
 from glob import iglob
@@ -13,7 +14,8 @@ from pyingest.serializers.classic import Tagged
 PARSER_TYPES = {'jats': JATSParser(),
                 'dc': DataciteParser(),
                 'cr': CrossrefParser(),
-                'nlm': JATSParser()
+                'nlm': JATSParser(),
+                'elsevier': ElsevierParser()
                }
 
 logger = setup_logging('manual-parser')
