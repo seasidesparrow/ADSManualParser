@@ -63,6 +63,7 @@ class Translator(object):
     # TITLE
     def _get_title(self):
         title = self.data.get('title', None)
+        subtitle = self.data.get('subtitle', None)
         if title:
             title_en = title.get('textEnglish', None)
             title_tn = title.get('textNative', None)
@@ -73,13 +74,15 @@ class Translator(object):
                 if title_tn:
                     self.output['title'] = title_tn
                     self.output['language'] = title_ln
+            if subtitle:
+                self.output['title'] += ": " + subtitle
 
 
     # INDIVIDUAL NAME
     def _get_name(self, name):
         surname = name.get('surname', None)
-        given_name = name.get('given-name', None)
-        middle_name = name.get('middle-name', None)
+        given_name = name.get('given_name', None)
+        middle_name = name.get('middle_name', None)
         pubraw = name.get('pubraw', None)
         collab = name.get('collab', None)
         outname = None
@@ -223,6 +226,10 @@ class Translator(object):
                 doi = i.get('DOI', None)
                 if doi:
                     props['DOI'] = doi
+        openaccess = self.data.get('openAccess', {}).get('open', False)
+        if openaccess:
+            props['OPEN'] = 1
+            
         if props:
             self.output['properties'] = props
         pass

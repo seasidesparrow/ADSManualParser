@@ -1,20 +1,24 @@
 import argparse
 import json
+import os
 from adsmanparse import translator, doiharvest
 from adsingestp.parsers.crossref import CrossrefParser
 from adsingestp.parsers.jats import JATSParser
 from adsingestp.parsers.datacite import DataciteParser
+from adsingestp.parsers.elsevier import ElsevierParser
 from adsputils import setup_logging
+from datetime import datetime, timedelta
 from glob import iglob
 from pyingest.serializers.classic import Tagged
 
 PARSER_TYPES = {'jats': JATSParser(),
                 'dc': DataciteParser(),
                 'cr': CrossrefParser(),
-                'nlm': JATSParser()
+                'nlm': JATSParser(),
+                'elsevier': ElsevierParser()
                }
 
-logger = setup_logging('logs')
+logger = setup_logging('manual-parser')
 
 def get_args():
 
@@ -49,11 +53,18 @@ def get_args():
                         help='File that tagged format will be written to')
 
     parser.add_argument('-p',
-                      '--proc_path',
-                      dest='proc_path',
-                      action='store',
-                      default=None,
-                      help='Path to files or list of files')
+                        '--proc_path',
+                        dest='proc_path',
+                        action='store',
+                        default=None,
+                        help='Path to files or list of files')
+
+    parser.add_argument('-a',
+                        '--age',
+                        dest='proc_since',
+                        action='store',
+                        default=None,
+                        help='Age (in days) of oldest files in --proc_path to process')
 
     parser.add_argument('-t',
                         '--file_type',
@@ -74,7 +85,12 @@ def main():
 
     # This route processes data from user-input files
     if args.proc_path:
-        infiles = iglob(args.proc_path)
+        infiles = iglob(args.proc_path, recursive=True)
+        if infiles and args.proc_since:
+            dtime = timedelta(days=int(args.proc_since))
+            today = datetime.today()
+            infiles_since = [x for x in infiles if ((today - datetime.fromtimestamp(os.path.getmtime(x))) <= dtime)]
+            infiles = infiles_since
         for f in infiles:
             try:
                 with open(f, 'r') as fin:
@@ -118,7 +134,6 @@ def main():
         ptype = rec.get('type', None)
         filename = rec.get('name', None)
         parser = PARSER_TYPES.get(ptype, None)
-        print('Input file: %s' % filename)
         if parser:
             try:
                 parser.__init__()
@@ -127,7 +142,7 @@ def main():
                 else:
                     ingestDocList.append(parser.parse(pdata))
             except Exception as err:
-                logger.warning("Error parsing record: %s" % err)
+                logger.warning("Error parsing record (%s): %s" % (filename,err))
         else:
             logger.error("No parser available for file_type '%s'." % args.file_type)
 
@@ -136,13 +151,13 @@ def main():
         if args.output_file:
             x = Tagged()
             with open(args.output_file, 'a') as fout:
-                try:
-                    for d in ingestDocList:
+                for d in ingestDocList:
+                    try:
                         xlator = translator.Translator()
                         xlator.translate(data=d, bibstem=args.bibstem)
                         x.write(xlator.output, fout)
-                except Exception as err:
-                    logger.warning("Export to tagged file failed: %s\t%s" % (err, d))
+                    except Exception as err:
+                        logger.warning("Export to tagged file failed: %s\t%s" % (err, d))
 
 
 if __name__ == '__main__':
