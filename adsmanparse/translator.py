@@ -211,6 +211,8 @@ class Translator(object):
         if date:
             try:
                 (y,m,d) = date.split('-')
+                if int(m) == 0:
+                   m = '01'
                 if int(d) == 0:
                    date = '-'.join([y,m])
             except Exception as err:
