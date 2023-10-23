@@ -5,7 +5,6 @@ from adsmanparse import translator, doiharvest
 from adsingestp.parsers.crossref import CrossrefParser
 from adsingestp.parsers.jats import JATSParser
 from adsingestp.parsers.datacite import DataciteParser
-from adsingestp.parsers.elsevier import ElsevierParser
 from adsputils import setup_logging
 from datetime import datetime, timedelta
 from glob import iglob
@@ -14,8 +13,7 @@ from pyingest.serializers.classic import Tagged
 PARSER_TYPES = {'jats': JATSParser(),
                 'dc': DataciteParser(),
                 'cr': CrossrefParser(),
-                'nlm': JATSParser(),
-                'elsevier': ElsevierParser()
+                'nlm': JATSParser()
                }
 
 logger = setup_logging('manual-parser')
@@ -28,7 +26,7 @@ def get_args():
                         '--bibstem',
                         dest='bibstem',
                         action='store',
-                        default=None,
+                        default='jaxa',
                         help='Bibstem for special handling and/or bibcode(s)')
 
     parser.add_argument('-d',
@@ -70,7 +68,7 @@ def get_args():
                         '--file_type',
                         dest='file_type',
                         action='store',
-                        default='jats',
+                        default=None,
                         help='Type of input file: jats, dc, cr, nlm')
 
     args = parser.parse_args()
@@ -82,6 +80,16 @@ def main():
     args = get_args()
     rawDataList = []
     ingestDocList = []
+
+    # --------------------------------------------
+    # Arguments specific to weekly parsing of MPEC
+    # MT, 2023Jul06
+    args.proc_path = "/proj/ads_abstracts/sources/DataCite/doi/10.17597/isas.darts/*.xml"
+    args.proc_since = 2
+    args.file_type = 'dc'
+    filedate = datetime.date(datetime.today()).strftime("%Y%m%d")
+    args.output_file = "/proj/ads_abstracts/ingest/ADSManualParser/JAXA_" + filedate + ".tag"
+    # --------------------------------------------
 
     # This route processes data from user-input files
     if args.proc_path:
@@ -162,15 +170,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-# Plos ONE example from Habanero docs
-# doi = '10.1371/journal.pone.0033693'
-
-# MDPI Galaxies -- has abstract
-# doi = '10.3390/galaxies9040111'
-
-# PNAS volume 1 paper (1915)
-# doi = '10.1073/pnas.1.1.51'
-
