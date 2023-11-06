@@ -1,14 +1,13 @@
 import argparse
 import json
 import os
-from adsmanparse import translator, doiharvest
+from adsmanparse import translator, doiharvest, classic_serializer
 from adsingestp.parsers.crossref import CrossrefParser
 from adsingestp.parsers.jats import JATSParser
 from adsingestp.parsers.datacite import DataciteParser
 from adsputils import setup_logging
 from datetime import datetime, timedelta
 from glob import iglob
-from pyingest.serializers.classic import Tagged
 
 PARSER_TYPES = {'jats': JATSParser(),
                 'dc': DataciteParser(),
@@ -157,13 +156,13 @@ def main():
 
     if ingestDocList:
         if args.output_file:
-            x = Tagged()
+            x = classic_serializer.ClassicSerializer()
             with open(args.output_file, 'a') as fout:
                 for d in ingestDocList:
                     try:
                         xlator = translator.Translator()
                         xlator.translate(data=d, bibstem=args.bibstem)
-                        x.write(xlator.output, fout)
+                        fout.write(x.output(xlator.output))
                     except Exception as err:
                         logger.warning("Export to tagged file failed: %s\t%s" % (err, d))
 

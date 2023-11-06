@@ -2,8 +2,8 @@ import os
 import json
 from adsingestp.parsers.arxiv import ArxivParser
 from adsmanparse.translator import Translator
+from adsmanparse.classic_serializer import ClassicSerializer
 from glob import glob
-from pyingest.serializers.classic import Tagged
 
 inputFiles = glob('/proj/ads_abstracts/sources/PoS/oai/pos.sissa.it/ECRS/*')
 
@@ -20,8 +20,9 @@ for f in inputFiles:
         print('There was a problem with %s: %s' % (f, err))
     else:
         try:
-            lol = Tagged()
-            lol.write(xlator.output, fout)
+            lol = ClassicSerializer()
+            with open('pos.tagged', 'a') as fout:
+                fout.write(lol.output(xlator.output))
         except Exception as err:
             print('failed to write tagged output for %s: %s' % (f, err))
 
