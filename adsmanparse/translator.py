@@ -217,7 +217,7 @@ class Translator(object):
                    date = '-'.join([y,m])
             except Exception as err:
                 pass
-            self.output['pubdate'] = "%s/%s" % (y,m)
+            self.output['pubdate'] = "%s/%s" % (m,y)
 
 
     def _get_properties(self):
