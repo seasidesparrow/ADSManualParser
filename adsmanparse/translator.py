@@ -1,5 +1,5 @@
 from adsmanparse.exceptions import *
-from pyingest.config.config import *
+#from pyingest.config.config import *
 from adsenrich.bibcodes import BibcodeGenerator
 from bs4 import BeautifulSoup
 import re

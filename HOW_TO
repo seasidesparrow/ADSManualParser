@@ -1,0 +1,31 @@
+MT, 2023 May 09 +
+
+================
+
+Harvest a recent IOP delivery (e.g. ".../data/IOPP/2023-05-09"):
+
+* log into adsnull [adsnull as of May 09, while adsnest is still offline]
+
+* in /proj/ads/abstracts/ingest/ADSManualParser, do the following:
+	* 'source venv/bin/activate.csh'
+	* 'python run.py -p "/proj/ads/abstracts/data/IOPP/2023-05-09/**/*.xml" -t jats -f iop_20230509.tag'
+
+!! NOTE: there are still issues with bibcodes not agreeing 100% classic
+
+================
+
+Harvest MPEC, weekly:
+
+* log into adsnull [adsnull as of May 09, while adsnest is still offline]
+
+* in /proj/ads/abstracts/sources/DataCite, do the following:
+	* 'source venv/bin/activate.csh'
+	* 'python example_mpec.py'
+	* 'deactivate'
+
+* in /proj/ads/abstracts/ingest/ADSManualParser, do the following:
+	* 'source venv/bin/activate.csh'
+	* 'python run.py -b MPEC -p "/proj/ads/abstracts/sources/DataCite/doi/10.48377/mpec/*.xml" -a 2 -t dc -f output.tag'
+	* 'deactivate'
+
+================
