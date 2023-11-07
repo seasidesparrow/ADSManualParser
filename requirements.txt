@@ -1,4 +1,4 @@
-git+https://github.com/adsabs/ADSIngestParser@v0.9.8
+git+https://github.com/adsabs/ADSIngestParser@v0.9.9
 git+https://github.com/adsabs/ADSIngestEnrichment@v0.1.11
 adsputils==1.4.3
 habanero==0.7.4
