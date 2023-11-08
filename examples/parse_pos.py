@@ -1,26 +1,27 @@
 import os
 import json
-from adsingestp.parsers.datacite import DataciteParser
+from adsingestp.parsers.arxiv import ArxivParser
 from adsmanparse.translator import Translator
 from adsmanparse.classic_serializer import ClassicSerializer
 from glob import glob
 
-inputFiles = glob('/proj/ads/abstracts/sources/DataCite/doi/10.48377/mpec/*')
+inputFiles = glob('/proj/ads_abstracts/sources/PoS/oai/pos.sissa.it/ECRS/*')
 
+fout = open('pos.tagged','a')
 for f in inputFiles:
     try:
         with open(f, 'rb') as fh:
             rawData = fh.read()
-        parser = DataciteParser()
+        parser = ArxivParser()
         ingestRecord = parser.parse(rawData)
         xlator = Translator(data=ingestRecord)
-        xlator.translate(bibstem='MPEC')
+        xlator.translate(bibstem='fnord')
     except Exception as err:
         print('There was a problem with %s: %s' % (f, err))
     else:
         try:
             lol = ClassicSerializer()
-            with open('mpec.tagged','a') as fout:
+            with open('pos.tagged', 'a') as fout:
                 fout.write(lol.output(xlator.output))
         except Exception as err:
             print('failed to write tagged output for %s: %s' % (f, err))

@@ -25,7 +25,7 @@ def get_args():
                         '--bibstem',
                         dest='bibstem',
                         action='store',
-                        default='MPEC',
+                        default='jaxa',
                         help='Bibstem for special handling and/or bibcode(s)')
 
     parser.add_argument('-d',
@@ -83,11 +83,11 @@ def main():
     # --------------------------------------------
     # Arguments specific to weekly parsing of MPEC
     # MT, 2023Jul06
-    args.proc_path = "/proj/ads_abstracts/sources/DataCite/doi/10.48377/mpec/*.xml"
+    args.proc_path = "/proj/ads_abstracts/sources/DataCite/doi/10.17597/isas.darts/*.xml"
     args.proc_since = 2
     args.file_type = 'dc'
     filedate = datetime.date(datetime.today()).strftime("%Y%m%d")
-    args.output_file = "/proj/ads/abstracts/sources/MPEC/MPEC_" + filedate + ".tag"
+    args.output_file = "/proj/ads_abstracts/ingest/ADSManualParser/JAXA_" + filedate + ".tag"
     # --------------------------------------------
 
     # This route processes data from user-input files
@@ -169,4 +169,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

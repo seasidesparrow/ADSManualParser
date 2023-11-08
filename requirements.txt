@@ -1,4 +1,6 @@
-git+https://github.com/adsabs/ADSIngestParser.git@v0.9.7
-git+https://github.com/adsabs/ADSIngestEnrichment.git@v0.1.7
-git+https://github.com/adsabs/ADSPipelineUtils@v1.4.3
-git+https://github.com/adsabs/adsabs-pyingest.git@v1.2.4
+git+https://github.com/adsabs/ADSIngestParser@v0.9.9
+git+https://github.com/adsabs/ADSIngestEnrichment@v0.1.11
+adsputils==1.4.3
+habanero==0.7.4
+namedentities==1.9.4
+validators==0.22.0

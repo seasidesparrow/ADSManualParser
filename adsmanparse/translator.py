@@ -1,5 +1,5 @@
 from adsmanparse.exceptions import *
-from pyingest.config.config import *
+#from pyingest.config.config import *
 from adsenrich.bibcodes import BibcodeGenerator
 from bs4 import BeautifulSoup
 import re
@@ -217,7 +217,7 @@ class Translator(object):
                    date = '-'.join([y,m])
             except Exception as err:
                 pass
-            self.output['pubdate'] = date
+            self.output['pubdate'] = "%s/%s" % (m,y)
 
 
     def _get_properties(self):

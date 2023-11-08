@@ -1,21 +1,24 @@
 import argparse
 import json
 import os
-from adsmanparse import translator, doiharvest
+from adsmanparse import translator, doiharvest, classic_serializer
 from adsingestp.parsers.crossref import CrossrefParser
 from adsingestp.parsers.jats import JATSParser
 from adsingestp.parsers.datacite import DataciteParser
 from adsingestp.parsers.elsevier import ElsevierParser
+from adsingestp.parsers.adsfeedback import ADSFeedbackParser
+from adsingestp.parsers.copernicus import CopernicusParser
 from adsputils import setup_logging
 from datetime import datetime, timedelta
 from glob import iglob
-from pyingest.serializers.classic import Tagged
 
 PARSER_TYPES = {'jats': JATSParser(),
                 'dc': DataciteParser(),
                 'cr': CrossrefParser(),
                 'nlm': JATSParser(),
-                'elsevier': ElsevierParser()
+                'elsevier': ElsevierParser(),
+                'feedback': ADSFeedbackParser(),
+                'copernicus': CopernicusParser(),
                }
 
 logger = setup_logging('manual-parser')
@@ -70,8 +73,8 @@ def get_args():
                         '--file_type',
                         dest='file_type',
                         action='store',
-                        default=None,
-                        help='Type of input file: jats, dc, cr, nlm')
+                        default='jats',
+                        help='Type of input file: jats, dc, cr, nlm, elsevier, feedback')
 
     args = parser.parse_args()
     return args
@@ -149,28 +152,16 @@ def main():
 
     if ingestDocList:
         if args.output_file:
-            x = Tagged()
+            seri = classic_serializer.ClassicSerializer()
             with open(args.output_file, 'a') as fout:
                 for d in ingestDocList:
                     try:
                         xlator = translator.Translator()
                         xlator.translate(data=d, bibstem=args.bibstem)
-                        x.write(xlator.output, fout)
+                        fout.write("%s\n\n" % seri.output(xlator.output))
                     except Exception as err:
                         logger.warning("Export to tagged file failed: %s\t%s" % (err, d))
 
 
 if __name__ == '__main__':
     main()
-
-
-
-# Plos ONE example from Habanero docs
-# doi = '10.1371/journal.pone.0033693'
-
-# MDPI Galaxies -- has abstract
-# doi = '10.3390/galaxies9040111'
-
-# PNAS volume 1 paper (1915)
-# doi = '10.1073/pnas.1.1.51'
-
