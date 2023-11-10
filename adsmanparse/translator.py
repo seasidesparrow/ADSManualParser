@@ -92,6 +92,8 @@ class Translator(object):
                 outname = outname + ', ' + given_name
                 if middle_name:
                     outname = outname + ' ' + middle_name
+        elif collab:
+            outname = collab
         return outname
 
     # INDIVIDUAL AFFIL
