@@ -193,7 +193,8 @@ class Translator(object):
             odate = None
             
             for od in otherdate:
-                if od.get('otherDateType', None) == 'Available':
+                odtype = od.get('otherDateType', None)
+                if odtype in ['Available', 'Issued']:
                     odate = od.get('otherDateValue', None)
             if odate:
                 otherdate = odate
@@ -296,6 +297,8 @@ class Translator(object):
                     pubstring = pubstring + ', ' + pagecount + ' pp.'
             if pubstring:
                 self.output['publication'] = pubstring
+            if publisher == 'Zenodo':
+                self.output['source'] = publisher
 
     def _get_bibcode(self, bibstem=None):
         try:
