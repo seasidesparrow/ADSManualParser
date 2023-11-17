@@ -184,10 +184,17 @@ def main():
         if parser:
             try:
                 parser.__init__()
+                parsedrecord = None
                 if ptype == 'nlm':
-                    ingestDocList.append(parser.parse(pdata, bsparser='lxml-xml'))
+                    parsedrecord = parser.parse(pdata, bsparser='lxml-xml')
                 else:
-                    ingestDocList.append(parser.parse(pdata))
+                    parsedrecord = parser.parse(pdata)
+                if parsedrecord:
+                    if filename:
+                        parsedrecord.setdefault("recordData", {}).setdefault("loadLocation", filename)
+                    ingestDocList.append(parsedrecord)
+                else:
+                    raise Exception("Null body returned by parser!")
             except Exception as err:
                 logger.warning("Error parsing record (%s): %s" % (filename,err))
         else:
