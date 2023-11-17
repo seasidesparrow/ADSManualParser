@@ -101,7 +101,7 @@ def get_args():
     parser.add_argument('-z',
                         '--parsedfile',
                         dest='parsedfile',
-                        action='store',
+                        action='store_true',
                         default=None,
                         help='Output parsed filename in properties tag')
 

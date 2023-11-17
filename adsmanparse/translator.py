@@ -353,7 +353,7 @@ class Translator(object):
             self.data['authors'] = new_authors
                    
 
-    def translate(self, data=None, publisher=None, bibstem=None, parsedfile=None):
+    def translate(self, data=None, publisher=None, bibstem=None, parsedfile=False):
         if data:
             self.data = data
         if not self.data:
