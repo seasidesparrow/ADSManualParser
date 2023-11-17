@@ -98,6 +98,13 @@ def get_args():
                         default=None,
                         help='Origin/publisher of record/reference data')
 
+    parser.add_argument('-z',
+                        '--parsedfile',
+                        dest='parsedfile',
+                        action='store',
+                        default=None,
+                        help='Output parsed filename in properties tag')
+
 
     args = parser.parse_args()
     return args
@@ -107,7 +114,7 @@ def create_tagged(rec=None, args=None):
     try:
         xlator = translator.Translator()
         seri = classic_serializer.ClassicSerializer()
-        xlator.translate(data=rec, bibstem=args.bibstem)
+        xlator.translate(data=rec, bibstem=args.bibstem, parsedfile=args.parsedfile)
         output = seri.output(xlator.output)
         return output
     except Exception as err:
