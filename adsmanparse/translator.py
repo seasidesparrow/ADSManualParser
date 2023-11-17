@@ -1,5 +1,4 @@
 from adsmanparse.exceptions import *
-#from pyingest.config.config import *
 from adsenrich.bibcodes import BibcodeGenerator
 from bs4 import BeautifulSoup
 import re
@@ -223,7 +222,7 @@ class Translator(object):
             self.output['pubdate'] = "%s/%s" % (m,y)
 
 
-    def _get_properties(self):
+    def _get_properties(self, parsedfile):
         props = {}
         persistentids = self.data.get('persistentIDs', None)
         if persistentids:
@@ -234,6 +233,11 @@ class Translator(object):
         openaccess = self.data.get('openAccess', {}).get('open', False)
         if openaccess:
             props['OPEN'] = 1
+
+        if parsedfile:
+            parsedFileName = self.data.get('recordData', {}).get('loadLocation', None)
+            if parsedFileName:
+                props['FILE'] = parsedFileName
             
         if props:
             self.output['properties'] = props
@@ -349,7 +353,7 @@ class Translator(object):
             self.data['authors'] = new_authors
                    
 
-    def translate(self, data=None, publisher=None, bibstem=None):
+    def translate(self, data=None, publisher=None, bibstem=None, parsedfile=None):
         if data:
             self.data = data
         if not self.data:
@@ -363,6 +367,6 @@ class Translator(object):
             self._get_auths_affils()
             self._get_date()
             self._get_references()
-            self._get_properties()
+            self._get_properties(parsedfile)
             self._get_publication()
             self._get_bibcode(bibstem=bibstem)
