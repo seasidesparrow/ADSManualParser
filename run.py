@@ -88,7 +88,7 @@ def get_args():
                         '--ref_dir',
                         dest='ref_dir',
                         action='store',
-                        default='./references/sources',
+                        default='/proj/ads/references/sources/',
                         help='Base path to reference output directory')
 
     parser.add_argument('-s',
