@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 from adsmanparse import translator, doiharvest, classic_serializer
+from adsenrich.references import ReferenceWriter
 from adsingestp.parsers.crossref import CrossrefParser
 from adsingestp.parsers.jats import JATSParser
 from adsingestp.parsers.datacite import DataciteParser
@@ -76,8 +77,58 @@ def get_args():
                         default='jats',
                         help='Type of input file: jats, dc, cr, nlm, elsevier, feedback')
 
+    parser.add_argument('-w',
+                        '--write_refs',
+                        dest='write_refs',
+                        action='store_true',
+                        default=False,
+                        help='Export references from records along with bibdata')
+
+    parser.add_argument('-r',
+                        '--ref_dir',
+                        dest='ref_dir',
+                        action='store',
+                        default='./references/sources',
+                        help='Base path to reference output directory')
+
+    parser.add_argument('-s',
+                        '--source',
+                        dest='source',
+                        action='store',
+                        default=None,
+                        help='Origin/publisher of record/reference data')
+
+    parser.add_argument('-z',
+                        '--parsedfile',
+                        dest='parsedfile',
+                        action='store_true',
+                        default=False,
+                        help='Output parsed filename in properties tag')
+
+
     args = parser.parse_args()
     return args
+
+
+def create_tagged(rec=None, args=None):
+    try:
+        xlator = translator.Translator()
+        seri = classic_serializer.ClassicSerializer()
+        xlator.translate(data=rec, bibstem=args.bibstem, parsedfile=args.parsedfile)
+        output = seri.output(xlator.output)
+        return output
+    except Exception as err:
+        logger.warning("Export to tagged file failed: %s\t%s" % (err, rec))
+
+
+def create_refs(rec=None, args=None):
+    try:
+        rw = ReferenceWriter(reference_directory=args.ref_dir,
+                             reference_source=args.source,
+                             data=rec)
+        rw.write_references_to_file()
+    except Exception as err:
+        logger.warning("Unable to write references: %s" % err)
 
 
 def main():
@@ -140,10 +191,18 @@ def main():
         if parser:
             try:
                 parser.__init__()
+                parsedrecord = None
                 if ptype == 'nlm':
-                    ingestDocList.append(parser.parse(pdata, bsparser='lxml-xml'))
+                    parsedrecord = parser.parse(pdata, bsparser='lxml-xml')
                 else:
-                    ingestDocList.append(parser.parse(pdata))
+                    parsedrecord = parser.parse(pdata)
+                if parsedrecord:
+                    if filename:
+                        if not parsedrecord.get("recordData", {}).get("loadLocation", None):
+                            parsedrecord["recordData"]["loadLocation"] = filename
+                    ingestDocList.append(parsedrecord)
+                else:
+                    raise Exception("Null body returned by parser!")
             except Exception as err:
                 logger.warning("Error parsing record (%s): %s" % (filename,err))
         else:
@@ -152,15 +211,15 @@ def main():
 
     if ingestDocList:
         if args.output_file:
-            seri = classic_serializer.ClassicSerializer()
             with open(args.output_file, 'a') as fout:
                 for d in ingestDocList:
-                    try:
-                        xlator = translator.Translator()
-                        xlator.translate(data=d, bibstem=args.bibstem)
-                        fout.write("%s\n\n" % seri.output(xlator.output))
-                    except Exception as err:
-                        logger.warning("Export to tagged file failed: %s\t%s" % (err, d))
+                    tagged = create_tagged(rec=d, args=args)
+                    if tagged:
+                        fout.write("%s\n" % tagged)
+                    else:
+                        logger.info("Tagged record not written.")
+                    if args.write_refs:
+                        create_refs(rec=d, args=args)
 
 
 if __name__ == '__main__':
