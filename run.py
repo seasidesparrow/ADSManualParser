@@ -102,7 +102,7 @@ def get_args():
                         '--parsedfile',
                         dest='parsedfile',
                         action='store_true',
-                        default=None,
+                        default=False,
                         help='Output parsed filename in properties tag')
 
 
@@ -198,7 +198,8 @@ def main():
                     parsedrecord = parser.parse(pdata)
                 if parsedrecord:
                     if filename:
-                        parsedrecord.setdefault("recordData", {}).setdefault("loadLocation", filename)
+                        if not parsedrecord.get("recordData", {}).get("loadLocation", None):
+                            parsedrecord["recordData"]["loadLocation"] = filename
                     ingestDocList.append(parsedrecord)
                 else:
                     raise Exception("Null body returned by parser!")
