@@ -217,9 +217,9 @@ class Translator(object):
                    m = '01'
                 if int(d) == 0:
                    date = '-'.join([y,m])
+                self.output['pubdate'] = "%s/%s" % (m,y)
             except Exception as err:
                 pass
-            self.output['pubdate'] = "%s/%s" % (m,y)
 
 
     def _get_properties(self, parsedfile):
