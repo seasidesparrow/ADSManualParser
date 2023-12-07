@@ -165,13 +165,21 @@ class Translator(object):
     def _get_keywords(self):
         keywords = self.data.get('keywords', None)
         keyword_list = []
+        uat_list = []
         if keywords:
             for k in keywords:
                 keyw = k.get('keyString', None)
+                keytype = k.get('keySystem', None)
+                keyid = k.get('keyID', None)
                 if keyw:
                     keyword_list.append(keyw)
+                if keytype == 'UAT':
+                    if keyid:
+                        uat_list.append(keyid)
         if keyword_list:
             self.output['keywords'] = ', '.join(keyword_list)
+        if uat_list:
+            self.output['uatkeys'] = ', '.join(uat_list)
 
 
     def _get_date(self):
@@ -214,9 +222,11 @@ class Translator(object):
             try:
                 (y,m,d) = date.split('-')
                 if int(m) == 0:
-                   m = '01'
+                    m = '01'
+                elif int(m) > 12:
+                    m = '00'
                 if int(d) == 0:
-                   date = '-'.join([y,m])
+                    date = '-'.join([y,m])
                 self.output['pubdate'] = "%s/%s" % (m,y)
             except Exception as err:
                 pass
