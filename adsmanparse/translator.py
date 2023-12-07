@@ -238,8 +238,14 @@ class Translator(object):
         if persistentids:
             for i in persistentids:
                 doi = i.get('DOI', None)
+                preprint = i.get('preprint', None)
                 if doi:
                     props['DOI'] = doi
+                if preprint:
+                   source = preprint.get('source', None)
+                   ident = preprint.get('identifier', None)
+                   if source == 'arxiv' and ident:
+                       props['ARXIV'] = ident
         openaccess = self.data.get('openAccess', {}).get('open', False)
         if openaccess:
             props['OPEN'] = 1
