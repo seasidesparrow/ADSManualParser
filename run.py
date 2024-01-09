@@ -1,7 +1,7 @@
 import argparse
 import json
 import os
-from adsmanparse import translator, doiharvest, classic_serializer
+from adsmanparse import translator, doiharvest, classic_serializer, hasbody
 from adsenrich.references import ReferenceWriter
 from adsingestp.parsers.crossref import CrossrefParser
 from adsingestp.parsers.jats import JATSParser
@@ -188,6 +188,7 @@ def main():
         ptype = rec.get('type', None)
         filename = rec.get('name', None)
         parser = PARSER_TYPES.get(ptype, None)
+        write_file = hasbody.has_body(pdata)
         if parser:
             try:
                 parser.__init__()
@@ -200,6 +201,8 @@ def main():
                     if filename:
                         if not parsedrecord.get("recordData", {}).get("loadLocation", None):
                             parsedrecord["recordData"]["loadLocation"] = filename
+                        if not write_file:
+                            parsedrecord["recordData"]["loadLocation"] = None
                     ingestDocList.append(parsedrecord)
                 else:
                     raise Exception("Null body returned by parser!")
