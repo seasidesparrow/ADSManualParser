@@ -235,6 +235,17 @@ class Translator(object):
     def _get_properties(self, parsedfile):
         props = {}
         persistentids = self.data.get('persistentIDs', None)
+        esources = self.data.get('esources', None)
+        if esources:
+            for src in esources:
+                source = src.get('source', None)
+                location = src.get('location', None)
+                if source == 'pub_pdf' and location:
+                    props['PDF'] = location
+                elif source == 'pub_html' and location:
+                    props['HTML'] = location
+                    
+                
         if persistentids:
             for i in persistentids:
                 doi = i.get('DOI', None)
