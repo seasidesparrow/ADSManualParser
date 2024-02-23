@@ -29,6 +29,7 @@ class ClassicSerializer(object):
         data = re.sub(r"&[rl]squo;", "\'", data)
         data = re.sub(r"&[rl]dquo;", "\"", data)
         data = re.sub(r"&nbsp;", " ", data)
+        data = re.sub(r"&zwnj;", " ", data)
         return data
 
     def __init__(self, **kwargs):
@@ -43,6 +44,7 @@ class ClassicSerializer(object):
             ('language', {'tag': 'M'}),
             ('comments', {'tag': 'X', 'join': '; '}),
             ('source', {'tag': 'G'}),
+            ('copyright', {'tag': 'C'}),
             ('uatkeys', {'tag': 'U', 'join': ', '}),
             ('keywords', {'tag': 'K', 'join': ', '}),
             ('subjectcategory', {'tag': 'Q', 'join': '; '}),
