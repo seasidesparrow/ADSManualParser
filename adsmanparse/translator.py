@@ -337,6 +337,10 @@ class Translator(object):
         except Exception as err:
             print('Couldnt make a bibcode: %s' % str(err))
 
+    def _get_copyright(self):
+        copyright_statement=self.data.get("copyright", {}).get("statement", None)
+        if copyright_statement:
+            self.output["copyright"] = copyright_statement
 
     def _special_handling(self, bibstem=None):
         # Special data handling rules on a per-bibstem basis
@@ -397,3 +401,4 @@ class Translator(object):
             self._get_properties(parsedfile)
             self._get_publication()
             self._get_bibcode(bibstem=bibstem)
+            self._get_copyright()
