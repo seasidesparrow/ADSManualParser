@@ -69,12 +69,17 @@ class Translator(object):
             title_ln = title.get('langNative', None)
             if title_en:
                 self.output['title'] = title_en
-            else:
-                if title_tn:
-                    self.output['title'] = title_tn
-                    self.output['language'] = title_ln
+            elif title_tn:
+                self.output['title'] = title_tn
+                self.output['language'] = title_ln
             if subtitle:
-                self.output['title'] += ": " + subtitle
+                subtitle_en = subtitle.get('textEnglish', None)
+                subtitle_tn = subtitle.get('textNative', None)
+                subtitle_ln = subtitle.get('langNative', None)
+                if subtitle_en:
+                    self.output['title'] += ": " + subtitle_en
+                elif subtitle_tn:
+                    self.output['title'] += ": " + subtitle_tn
 
 
     # INDIVIDUAL NAME
