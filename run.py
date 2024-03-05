@@ -35,6 +35,13 @@ def get_args():
                         default=None,
                         help='Bibstem for special handling and/or bibcode(s)')
 
+    parser.add_argument('-v',
+                        '--volume',
+                        dest='volume',
+                        action='store',
+                        default=None,
+                        help='Volume for special handling and/or bibcodes(s)')
+
     parser.add_argument('-d',
                         '--doi',
                         dest='fetch_doi',
@@ -114,7 +121,7 @@ def create_tagged(rec=None, args=None):
     try:
         xlator = translator.Translator()
         seri = classic_serializer.ClassicSerializer()
-        xlator.translate(data=rec, bibstem=args.bibstem, parsedfile=args.parsedfile)
+        xlator.translate(data=rec, bibstem=args.bibstem, volume=args.volume, parsedfile=args.parsedfile)
         output = seri.output(xlator.output)
         return output
     except Exception as err:

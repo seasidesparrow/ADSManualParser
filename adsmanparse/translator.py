@@ -336,9 +336,9 @@ class Translator(object):
             if publisher == 'Zenodo':
                 self.output['source'] = publisher
 
-    def _get_bibcode(self, bibstem=None):
+    def _get_bibcode(self, bibstem=None, volume=None):
         try:
-            self.output['bibcode'] = bibgen.make_bibcode(self.data, bibstem=bibstem)
+            self.output['bibcode'] = bibgen.make_bibcode(self.data, bibstem=bibstem, volume=volume)
         except Exception as err:
             print('Couldnt make a bibcode: %s' % str(err))
 
@@ -389,7 +389,7 @@ class Translator(object):
             self.data['authors'] = new_authors
                    
 
-    def translate(self, data=None, publisher=None, bibstem=None, parsedfile=False):
+    def translate(self, data=None, publisher=None, bibstem=None, volume=None, parsedfile=False):
         if data:
             self.data = data
         if not self.data:
@@ -405,5 +405,5 @@ class Translator(object):
             self._get_references()
             self._get_properties(parsedfile)
             self._get_publication()
-            self._get_bibcode(bibstem=bibstem)
+            self._get_bibcode(bibstem=bibstem, volume=volume)
             self._get_copyright()
