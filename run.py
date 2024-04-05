@@ -1,7 +1,6 @@
 import argparse
 import json
 import os
-from adsmanparse import translator, doiharvest, classic_serializer, hasbody
 from adsenrich.references import ReferenceWriter
 from adsingestp.parsers.crossref import CrossrefParser
 from adsingestp.parsers.jats import JATSParser
@@ -10,6 +9,7 @@ from adsingestp.parsers.elsevier import ElsevierParser
 from adsingestp.parsers.adsfeedback import ADSFeedbackParser
 from adsingestp.parsers.copernicus import CopernicusParser
 from adsingestp.parsers.wiley import WileyParser
+from adsmanparse import translator, doiharvest, classic_serializer, hasbody
 from adsputils import load_config, setup_logging
 from datetime import datetime, timedelta
 from glob import iglob
@@ -207,24 +207,23 @@ def process_record(rec, args):
 
 def process_filepath(args):
     if args.proc_path:
-        logger.debug("Finding files in path %s ..." % args.proc_path)
+        logger.info("Finding files in path %s ..." % args.proc_path)
         infiles = [x for x in iglob(args.proc_path, recursive=True)]
         if not infiles:
             logger.warning("No files found in path %s." % args.proc_path)
         else:
-            count = len(infiles)
-            print("haha %s" % str(count))
-            logger.debug("Found %s files." % count)
+            logger.info("Found %s files." % count)
             if args.proc_since:
+                logger.info("Checking file ages...")
                 dtime = timedelta(days=int(args.proc_since))
                 today = datetime.today()
                 infiles_since = [x for x in infiles if ((today - datetime.fromtimestamp(os.path.getmtime(x))) <= dtime)]
                 infiles = infiles_since
             if not infiles:
-                logger.error("No files more recent than %s days old" % str(args.proc_since))
+                logger.error("No files more recent than %s days old!" % str(args.proc_since))
             else:
                 nfiles = len(infiles)
-                logger.info("There were %s files found in path." % str(nfiles))
+                logger.info("There were %s files found to process" % str(nfiles))
                 for f in infiles:
                     inputRecord = {}
                     try:
