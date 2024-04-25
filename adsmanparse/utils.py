@@ -1,3 +1,4 @@
+import re
 from bs4 import BeautifulSoup
 
 def has_body(data):
@@ -14,3 +15,11 @@ def has_body(data):
             if body:
                 return True
     return False
+
+
+def suppress_title(record, suppressed_titles):
+    title = record.get('title', {}).get('textEnglish', None)
+    if title:
+        for dtitle in suppressed_titles:
+            if re.search(dtitle, title, flags=re.IGNORECASE):
+                return True

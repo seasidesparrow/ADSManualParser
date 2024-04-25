@@ -1,5 +1,37 @@
-LOGGING_LEVEL="DEBUG"
+LOGGING_LEVEL="INFO"
 LOG_STDOUT=True
 
 _API_TOKEN=None
 _API_URL=None
+
+DEPRECATED_TITLES=[
+    r'^Index$',
+    r'^Author\sIndex',
+    r'^Materials\sIndex',
+    r'^Masthead',
+    r'^Editorial\sBoard',
+    r'^Board\sof\sEditors',
+    r'^Editors\scontinued',
+    r'^Subject\sFields\sof\sEditors',
+    r'^Diary$',
+    r'^Keyword\sListing',
+    r'^Keyword\sIndex',
+    r'^Issue\sInformation',
+    r'^In\sthis\sIssue',
+    r'^Contents$',
+    r'^Contents\slist$',
+    r'^Table\sof\scontents',
+    r'^\s*$',
+    r'Information\sfor\sauthors',
+    r'^[OI][BF]C',
+    r'advertisement',
+    r'Front\scover',
+    r'Back\scover',
+    r'Blank\spage',
+    r'^Subject\sIndex',
+    r'^Publications\sReceived',
+    r'^Forthcoming\sPapers',
+    r'^Outside\sFront\sCover',
+    r'^Inside\sBack\sCover',
+    r'^Editorial\sAdvisory\sBoard',
+]

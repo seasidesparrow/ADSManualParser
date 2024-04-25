@@ -9,7 +9,7 @@ from adsingestp.parsers.elsevier import ElsevierParser
 from adsingestp.parsers.adsfeedback import ADSFeedbackParser
 from adsingestp.parsers.copernicus import CopernicusParser
 from adsingestp.parsers.wiley import WileyParser
-from adsmanparse import translator, doiharvest, classic_serializer, hasbody
+from adsmanparse import translator, doiharvest, classic_serializer, utils
 from adsputils import load_config, setup_logging
 from datetime import datetime, timedelta
 from glob import iglob
@@ -165,7 +165,7 @@ def parse_record(rec):
     ptype = rec.get('type', None)
     filename = rec.get('name', None)
     parser = PARSER_TYPES.get(ptype, None)
-    write_file = hasbody.has_body(pdata)
+    write_file = utils.has_body(pdata)
     parsedrecord = None
     if not parser:
         logger.error("No parser available for file_type '%s'." % ptype)
@@ -177,6 +177,8 @@ def parse_record(rec):
             else:
                 parsedrecord = parser.parse(pdata)
             if parsedrecord:
+                if utils.suppress_title(parsedrecord, conf.get("DEPRECATED_TITLES", [])):
+                    raise Exception("Warning: article matches a suppressed title.")
                 if filename:
                     if not parsedrecord.get("recordData", {}).get("loadLocation", None):
                         parsedrecord["recordData"]["loadLocation"] = filename
