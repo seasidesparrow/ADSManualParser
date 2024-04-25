@@ -214,7 +214,7 @@ def process_filepath(args):
         if not infiles:
             logger.warning("No files found in path %s." % args.proc_path)
         else:
-            logger.info("Found %s files." % count)
+            logger.info("Found %s files." % len(infiles))
             if args.proc_since:
                 logger.info("Checking file ages...")
                 dtime = timedelta(days=int(args.proc_since))
