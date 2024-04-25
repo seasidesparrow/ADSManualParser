@@ -178,6 +178,7 @@ def parse_record(rec):
                 parsedrecord = parser.parse(pdata)
             if parsedrecord:
                 if utils.suppress_title(parsedrecord, conf.get("DEPRECATED_TITLES", [])):
+                    parsedrecord = None
                     raise Exception("Warning: article matches a suppressed title.")
                 if filename:
                     if not parsedrecord.get("recordData", {}).get("loadLocation", None):
