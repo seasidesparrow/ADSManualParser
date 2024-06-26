@@ -349,7 +349,10 @@ class Translator(object):
 
     def _special_handling(self, bibstem=None):
         # Special data handling rules on a per-bibstem basis
-        if bibstem == 'MPEC':
+        if bibstem in ['pds..data','pdss.data']:
+            pubstring = "NASA Planetary Data System " + self.data.get("publisherIDs", {}).get("Identifier","")
+        
+        elif bibstem == 'MPEC':
             # To do:
             #	- reparse title into Circular no. and title
             #	- remove MPC Staff as author
