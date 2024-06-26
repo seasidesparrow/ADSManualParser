@@ -349,8 +349,10 @@ class Translator(object):
 
     def _special_handling(self, bibstem=None):
         # Special data handling rules on a per-bibstem basis
-        if bibstem in ['pds..data','pdss.data']:
-            pubstring = "NASA Planetary Data System " + self.data.get("publisherIDs", {}).get("Identifier","")
+        if bibstem == "pds..data" or bibstem == "pdss.data":
+             uri = self.data.get("publisherIDs", {})[0].get("Identifier", "")
+             pubstring = "NASA Planetary Data System %s" % uri
+             self.output["publication"] = pubstring
         
         elif bibstem == 'MPEC':
             # To do:
