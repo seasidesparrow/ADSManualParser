@@ -105,6 +105,7 @@ class Translator(object):
         attribs = contrib.get('attrib', None)
         affil = contrib.get('affiliation', None)
         affarray = []
+        affidarray = []
         orcid = None
         email = None
         outaffil=None
@@ -115,6 +116,34 @@ class Translator(object):
                     aff = a.get('affPubRaw', None)
                     if aff:
                         affarray.append(aff)
+                        affid = a.get('affPubID', None)
+                        aid_out = {}
+                        if affid:
+                            aid_dict = {}
+                            for x in affid:
+                                aid_dict[x["affIDType"]]=x["affID"]
+                            for system in ['ROR','GRID','ISNI']:
+                                try:
+                                    aid_out = {system: aid_dict[system]}
+                                    break
+                                except:
+                                    pass
+                        affidarray.append(aid_out)
+                     
+            if affidarray:
+                new_affarray = []
+                for ids, affstr in zip(affidarray, affarray):
+                    if ids:
+                        idkey = list(ids.keys())[0]
+                        idvalue = list(ids.values())[0]
+                        newaff='<AFF id="%s:%s">%s</AFF>' % (idkey,idvalue,affstr)
+                        new_affarray.append(newaff)
+                    else:
+                        new_affarray.append(affstr)
+                     
+                if len(affarray) == len(new_affarray):
+                    affarray = new_affarray
+                
             if attribs:
                 orcid = attribs.get('orcid', None)
                 if orcid:
