@@ -266,7 +266,7 @@ class Translator(object):
                 if int(m) == 0:
                     m = '00'
                 elif int(m) < 10:
-                    m = '0'+m
+                    m = '0'+str(int(m))
                 elif int(m) > 12:
                     m = '00'
                 self.output['pubdate'] = "%s/%s" % (m,y)
