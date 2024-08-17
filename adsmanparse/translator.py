@@ -256,14 +256,17 @@ class Translator(object):
             try:
                 (y,m,d) = date.split('-')
                 if int(m) == 0:
-                    m = '01'
+                    m = '00'
                 elif int(m) > 12:
                     m = '00'
                 if int(d) == 0:
                     date = '-'.join([y,m])
                 self.output['pubdate'] = "%s/%s" % (m,y)
             except Exception as err:
-                pass
+                if int(date) > 1000 and int(date) < 3000:
+                    y = date
+                    m = 00
+                    self.output['pubdate'] = "%s/%s" % (m,y)
 
 
     def _get_properties(self, parsedfile):
