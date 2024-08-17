@@ -254,20 +254,24 @@ class Translator(object):
         # if a date string was found, parse it to make output[pubdate]
         if date:
             try:
-                (y,m,d) = date.split('-')
+                dateparts = date.split('-')
+                (y, m, d) = (0,0,0)
+                if len(dateparts) == 1:
+                    y = dateparts[0]
+                elif len(dateparts) == 2:
+                    m = dateparts[1]
+                    y = dateparts[0]
+                elif len(dateparts) == 3:
+                    [y, m, d] = dateparts
                 if int(m) == 0:
                     m = '00'
+                elif int(m) < 10:
+                    m = '0'+m
                 elif int(m) > 12:
                     m = '00'
-                if int(d) == 0:
-                    date = '-'.join([y,m])
                 self.output['pubdate'] = "%s/%s" % (m,y)
             except Exception as err:
-                if int(date) > 1000 and int(date) < 3000:
-                    y = date
-                    m = 00
-                    self.output['pubdate'] = "%s/%s" % (m,y)
-
+                pass
 
     def _get_properties(self, parsedfile):
         props = {}
