@@ -225,10 +225,10 @@ class Translator(object):
         otherdate = pubdate.get('otherDate', None)
 
         if printdate:
-            if len(printdate) <= 4:
+            if len(printdate) < 4:
                 printdate = None
         if elecdate:
-            if len(elecdate) <= 4:
+            if len(elecdate) < 4:
                 elecdate = None
         if otherdate:
             odate = None
