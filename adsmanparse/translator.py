@@ -89,6 +89,7 @@ class Translator(object):
         middle_name = name.get('middle_name', None)
         pubraw = name.get('pubraw', None)
         collab = name.get('collab', None)
+        native = name.get('native_lang', None)
         outname = None
         if surname:
             outname = surname
@@ -98,7 +99,7 @@ class Translator(object):
                     outname = outname + ' ' + middle_name
         elif collab:
             outname = collab
-        return outname
+        return outname, native
 
     # INDIVIDUAL AFFIL
     def _get_affil(self, contrib):
@@ -170,20 +171,23 @@ class Translator(object):
         if authors:
             author_list = list()
             affil_list = list()
+            native_author_list = list()
             for a in authors:
                 # person
                 name = a.get('name', None)
                 if name:
                     # person name
-                    auth = self._get_name(name)
+                    (auth, native_auth) = self._get_name(name)
                     # person attribs and affil
                     aff = self._get_affil(a)
                     if aff == 'None':
                         aff = ''
                     author_list.append(auth)
+                    native_author_list.append(native_auth)
                     affil_list.append(aff)
             self.output['authors'] = author_list
             self.output['affiliations'] = affil_list
+            self.output['native_authors'] = native_author_list
 
 
     # ABSTRACT

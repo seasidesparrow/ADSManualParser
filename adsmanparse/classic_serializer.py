@@ -38,6 +38,7 @@ class ClassicSerializer(object):
             ('bibcode', {'tag': 'R'}),
             ('title', {'tag': 'T'}),
             ('authors', {'tag': 'A', 'join': '; '}),
+            ('native_authors', {'tag': 'n', 'join': '; '}),
             ('affiliations', {'tag': 'F', 'join': ', '}),
             ('pubdate', {'tag': 'D'}),
             ('publication', {'tag': 'J'}),
