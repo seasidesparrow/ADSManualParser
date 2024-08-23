@@ -60,8 +60,8 @@ class ClassicSerializer(object):
         formatted_affils = []
         if affils:
             for i in range(len(affils)):
-                f = "%s(%s)" % (self.AFF_LABEL[i], affils[i])
-                if not re_empty_affil.match(f):
+                if affils[i]:
+                    f = "%s(%s)" % (self.AFF_LABEL[i], affils[i])
                     formatted_affils.append(f)
         return formatted_affils
 
