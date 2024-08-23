@@ -38,7 +38,7 @@ class ClassicSerializer(object):
             ('bibcode', {'tag': 'R'}),
             ('title', {'tag': 'T'}),
             ('authors', {'tag': 'A', 'join': '; '}),
-            ('native_authors', {'tag': 'n', 'join': '; '}),
+            ('native_authors', {'tag': 'n', 'join': ', '}),
             ('affiliations', {'tag': 'F', 'join': ', '}),
             ('pubdate', {'tag': 'D'}),
             ('publication', {'tag': 'J'}),
@@ -69,7 +69,7 @@ class ClassicSerializer(object):
         output_text = []
         for k, v in self.FIELD_DICT.items():
             rec_field = record.get(k, None)
-            if k == "affiliations":
+            if k == "affiliations" or k == "native_authors":
                 rec_field = self._format_affil_field(rec_field)
             if rec_field:
                tag = v.get("tag", None)
