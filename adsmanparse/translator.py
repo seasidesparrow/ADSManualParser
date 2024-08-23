@@ -182,6 +182,8 @@ class Translator(object):
                     aff = self._get_affil(a)
                     if aff == 'None':
                         aff = ''
+                    if native_auth == 'None':
+                        native_auth = ''
                     author_list.append(auth)
                     native_author_list.append(native_auth)
                     affil_list.append(aff)
