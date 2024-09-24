@@ -3,6 +3,8 @@ LOG_STDOUT=True
 
 _API_TOKEN=None
 _API_URL=None
+_API_MAX_RETRIES = 1
+_API_RETRY_SLEEP = 1
 
 DEPRECATED_TITLES=[
     r'^Index$',

@@ -89,6 +89,7 @@ class Translator(object):
         middle_name = name.get('middle_name', None)
         pubraw = name.get('pubraw', None)
         collab = name.get('collab', None)
+        native = name.get('native_lang', None)
         outname = None
         if surname:
             outname = surname
@@ -98,13 +99,14 @@ class Translator(object):
                     outname = outname + ' ' + middle_name
         elif collab:
             outname = collab
-        return outname
+        return outname, native
 
     # INDIVIDUAL AFFIL
     def _get_affil(self, contrib):
         attribs = contrib.get('attrib', None)
         affil = contrib.get('affiliation', None)
         affarray = []
+        affidarray = []
         orcid = None
         email = None
         outaffil=None
@@ -115,6 +117,34 @@ class Translator(object):
                     aff = a.get('affPubRaw', None)
                     if aff:
                         affarray.append(aff)
+                        affid = a.get('affPubID', None)
+                        aid_out = {}
+                        if affid:
+                            aid_dict = {}
+                            for x in affid:
+                                aid_dict[x["affIDType"]]=x["affID"]
+                            for system in ['ROR','GRID','ISNI']:
+                                try:
+                                    aid_out = {system: aid_dict[system]}
+                                    break
+                                except:
+                                    pass
+                        affidarray.append(aid_out)
+                     
+            if affidarray:
+                new_affarray = []
+                for ids, affstr in zip(affidarray, affarray):
+                    if ids:
+                        idkey = list(ids.keys())[0]
+                        idvalue = list(ids.values())[0]
+                        newaff='<AFF id="%s:%s">%s</AFF>' % (idkey,idvalue,affstr)
+                        new_affarray.append(newaff)
+                    else:
+                        new_affarray.append(affstr)
+                     
+                if len(affarray) == len(new_affarray):
+                    affarray = new_affarray
+                
             if attribs:
                 orcid = attribs.get('orcid', None)
                 if orcid:
@@ -141,20 +171,25 @@ class Translator(object):
         if authors:
             author_list = list()
             affil_list = list()
+            native_author_list = list()
             for a in authors:
                 # person
                 name = a.get('name', None)
                 if name:
                     # person name
-                    auth = self._get_name(name)
+                    (auth, native_auth) = self._get_name(name)
                     # person attribs and affil
                     aff = self._get_affil(a)
                     if aff == 'None':
                         aff = ''
+                    if native_auth == 'None':
+                        native_auth = ''
                     author_list.append(auth)
+                    native_author_list.append(native_auth)
                     affil_list.append(aff)
             self.output['authors'] = author_list
             self.output['affiliations'] = affil_list
+            self.output['native_authors'] = native_author_list
 
 
     # ABSTRACT
@@ -196,10 +231,10 @@ class Translator(object):
         otherdate = pubdate.get('otherDate', None)
 
         if printdate:
-            if len(printdate) <= 4:
+            if len(printdate) < 4:
                 printdate = None
         if elecdate:
-            if len(elecdate) <= 4:
+            if len(elecdate) < 4:
                 elecdate = None
         if otherdate:
             odate = None
@@ -225,17 +260,24 @@ class Translator(object):
         # if a date string was found, parse it to make output[pubdate]
         if date:
             try:
-                (y,m,d) = date.split('-')
+                dateparts = date.split('-')
+                (y, m, d) = (0,0,0)
+                if len(dateparts) == 1:
+                    y = dateparts[0]
+                elif len(dateparts) == 2:
+                    m = dateparts[1]
+                    y = dateparts[0]
+                elif len(dateparts) == 3:
+                    [y, m, d] = dateparts
                 if int(m) == 0:
-                    m = '01'
+                    m = '00'
+                elif int(m) < 10:
+                    m = '0'+str(int(m))
                 elif int(m) > 12:
                     m = '00'
-                if int(d) == 0:
-                    date = '-'.join([y,m])
                 self.output['pubdate'] = "%s/%s" % (m,y)
             except Exception as err:
                 pass
-
 
     def _get_properties(self, parsedfile):
         props = {}
