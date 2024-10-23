@@ -335,8 +335,11 @@ class Translator(object):
                 volume = publication.get('volumeNum', None)
                 issue = publication.get('issueNum', None)
                 publisher = publication.get('publisher', None)
+                book = publication.get('bookSeries', {}).get('seriesName', None)
                 if journal:
                     pubstring = journal
+                elif book:
+                    pubstring = book
                 if volume:
                     if pubstring:
                         pubstring = pubstring + ', Volume ' + volume
