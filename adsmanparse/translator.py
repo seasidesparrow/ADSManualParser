@@ -324,6 +324,25 @@ class Translator(object):
             self.output['refhandler_list'] = references
 
 
+    def _get_editors(self):
+        otherContrib = self.data.get("otherContributor", [])
+        editors = []
+        editorstring=None
+        for oc in otherContrib:
+            if oc.get("role", None) == "editor":
+                given = oc.get("contrib", {}).get("name", {}).get("given_name", None)
+                surname = oc.get("contrib", {}).get("name", {}).get("surname", None)
+                if given:
+                    given = given[0]
+                editors.append(given + ". " + surname)
+        if len(editors) == 1:
+            editorstring = editor[0] + ", editor."
+        elif len(editors) <= 3:
+            editorstring = ", ".join(editors) + ", editors."
+        elif len(editors) > 3:
+            editorstring = editor[0] + "et al., editors."
+        return editorstring
+
     def _get_publication(self):
         if not self.output.get('publication', None):
             publication = self.data.get('publication', None)
@@ -338,14 +357,19 @@ class Translator(object):
                 book = publication.get('bookSeries', {}).get('seriesName', None)
                 conf = publication.get('confName', None)
                 dates = publication.get('confDates', None)
+                editors = self._get_editors()
                 if journal:
                     pubstring = journal
                 elif book:
                     pubstring = book
+                    if editors:
+                        pubstring = pubstring + "; " + editors
                 elif conf:
                     pubstring = conf
                     if dates:
                         pubstring = pubstring + ', ' + dates
+                    if editors:
+                        pubstring = pubstring + "; " + editors
                 if volume:
                     if pubstring:
                         pubstring = pubstring + ', Volume ' + volume
