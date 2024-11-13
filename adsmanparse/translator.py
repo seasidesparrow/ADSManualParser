@@ -340,7 +340,7 @@ class Translator(object):
         elif len(editors) > 1 and len(editors) <= 3:
             editorstring = ", ".join(editors) + ", editors."
         elif len(editors) > 3:
-            editorstring = editors[0] + "et al., editors."
+            editorstring = editors[0] + " et al., editors."
         return editorstring
 
     def _get_publication(self):
