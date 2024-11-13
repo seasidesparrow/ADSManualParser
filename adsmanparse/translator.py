@@ -360,6 +360,8 @@ class Translator(object):
                 editors = self._get_editors()
                 if journal:
                     pubstring = journal
+                    if editors:
+                        pubstring = pubstring + "; " + editors
                 elif book:
                     pubstring = book
                     if editors:
