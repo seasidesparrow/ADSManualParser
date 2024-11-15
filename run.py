@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import re
 from adsenrich.references import ReferenceWriter
 from adsingestp.parsers.crossref import CrossrefParser
 from adsingestp.parsers.jats import JATSParser
@@ -122,6 +123,13 @@ def get_args():
                         default=False,
                         help='Output parsed filename in properties tag')
 
+    parser.add_argument('-x',
+                        '--write_xref',
+                        dest='write_xref',
+                        action='store_true',
+                        default=False,
+                        help='Write doi-harvested records to xml file')
+
 
     args = parser.parse_args()
     return args
@@ -136,6 +144,31 @@ def create_tagged(rec=None, args=None):
     except Exception as err:
         logger.warning("Export to tagged file failed: %s\t%s" % (err, rec))
 
+
+def write_xml(inputRecord):
+    try:
+        if inputRecord.get("type", None) == "cr":
+            doi = inputRecord.get("name", None)
+            raw_data = inputRecord.get("data", "")
+            output_dir = conf.get("XML_OUTPUT_BASEDIR", "./doi/")
+            doi_to_path = doi.split("/")
+            path = []
+            if "http" in doi_to_path[0].lower():
+                doi_to_path = doi_to_path[3:]
+            for d in doi_to_path:
+                path.append(re.sub(r"[^\w_. -]+", "_", d))
+            filepath = "/".join(path)+'.xml'
+            output_path = output_dir + filepath
+            dirname = os.path.dirname(output_path)
+            if not os.path.exists(dirname):
+                os.makedirs(dirname)
+            with open(output_path, "w") as fx:
+                fx.write("%s\n" % raw_data)
+        else:
+            raise Exception("This is not a crossref file.")
+    except Exception as err:
+        logger.warning("Export of doi (%s) to xml failed: %s" % (doi, err))
+    
 
 def create_refs(rec=None, args=None):
     try:
@@ -250,9 +283,12 @@ def process_doilist(doilist, args):
         for d in doilist:
             try:
                 getdoi = doiharvest.DoiHarvester(doi=d)
-                inputRecord = {'data': getdoi.get_record(),
+                doi_record = getdoi.get_record()
+                inputRecord = {'data': doi_record,
                                'name': d,
                                'type': ptype}
+                if args.write_xref:
+                    write_xml(inputRecord)
             except Exception as err:
                 logger.warning("Failed to fetch doi %s: %s" % (d, err))
             else:
