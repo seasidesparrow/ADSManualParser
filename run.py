@@ -6,6 +6,7 @@ from adsenrich.references import ReferenceWriter
 from adsingestp.parsers.crossref import CrossrefParser
 from adsingestp.parsers.jats import JATSParser
 from adsingestp.parsers.datacite import DataciteParser
+from adsingestp.parsers.dubcore import DublinCoreParser
 from adsingestp.parsers.elsevier import ElsevierParser
 from adsingestp.parsers.adsfeedback import ADSFeedbackParser
 from adsingestp.parsers.copernicus import CopernicusParser
@@ -23,6 +24,7 @@ PARSER_TYPES = {'jats': JATSParser(),
                 'feedback': ADSFeedbackParser(),
                 'copernicus': CopernicusParser(),
                 'wiley': WileyParser(),
+                'dubcore': DublinCoreParser(),
                }
 
 proj_home = os.path.realpath(os.path.join(os.path.dirname(__file__), "./"))
