@@ -293,6 +293,16 @@ class Translator(object):
                     props['PDF'] = location
                 elif source == 'pub_html' and location:
                     props['HTML'] = location
+
+        # special case: inderscience
+        pubids = self.data.get('publisherIDs', [])
+        for i in pubids:
+            if i.get("attribute", None).upper() == "URL":
+                url = i.get("Identifier", "")
+                props['HTML'] = url
+                if "https://www.inderscienceonline.com" in url:
+                    doi = url.replace("https://www.inderscienceonline.com/doi/","")
+                    props['DOI'] = doi
                     
                 
         if persistentids:
