@@ -97,6 +97,8 @@ class Translator(object):
                 outname = outname + ', ' + given_name
                 if middle_name:
                     outname = outname + ' ' + middle_name
+        elif given_name:
+            outname = given_name
         elif collab:
             outname = collab
         return outname, native
@@ -291,6 +293,16 @@ class Translator(object):
                     props['PDF'] = location
                 elif source == 'pub_html' and location:
                     props['HTML'] = location
+
+        # special case: inderscience
+        pubids = self.data.get('publisherIDs', [])
+        for i in pubids:
+            if i.get("attribute", None).upper() == "URL":
+                url = i.get("Identifier", "")
+                props['HTML'] = url
+                if "https://www.inderscienceonline.com" in url:
+                    doi = url.replace("https://www.inderscienceonline.com/doi/","")
+                    props['DOI'] = doi
                     
                 
         if persistentids:
@@ -324,6 +336,25 @@ class Translator(object):
             self.output['refhandler_list'] = references
 
 
+    def _get_editors(self):
+        otherContrib = self.data.get("otherContributor", [])
+        editors = []
+        editorstring=None
+        for oc in otherContrib:
+            if oc.get("role", None) == "editor":
+                given = oc.get("contrib", {}).get("name", {}).get("given_name", None)
+                surname = oc.get("contrib", {}).get("name", {}).get("surname", None)
+                if given:
+                    given = given[0]
+                editors.append(given + ". " + surname)
+        if len(editors) == 1:
+            editorstring = editors[0] + ", editor."
+        elif len(editors) > 1 and len(editors) <= 3:
+            editorstring = ", ".join(editors) + ", editors."
+        elif len(editors) > 3:
+            editorstring = editors[0] + " et al., editors."
+        return editorstring
+
     def _get_publication(self):
         if not self.output.get('publication', None):
             publication = self.data.get('publication', None)
@@ -336,10 +367,23 @@ class Translator(object):
                 issue = publication.get('issueNum', None)
                 publisher = publication.get('publisher', None)
                 book = publication.get('bookSeries', {}).get('seriesName', None)
+                conf = publication.get('confName', None)
+                dates = publication.get('confDates', None)
+                editors = self._get_editors()
                 if journal:
                     pubstring = journal
+                    if editors:
+                        pubstring = pubstring + "; " + editors
                 elif book:
                     pubstring = book
+                    if editors:
+                        pubstring = pubstring + "; " + editors
+                elif conf:
+                    pubstring = conf
+                    if dates:
+                        pubstring = pubstring + ', ' + dates
+                    if editors:
+                        pubstring = pubstring + "; " + editors
                 if volume:
                     if pubstring:
                         pubstring = pubstring + ', Volume ' + volume
