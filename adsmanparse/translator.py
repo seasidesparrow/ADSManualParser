@@ -356,19 +356,19 @@ class Translator(object):
         return editorstring
 
     def _get_publication(self):
-        if not self.output.get('publication', None):
-            publication = self.data.get('publication', None)
-            pagination = self.data.get('pagination', None)
-            pubstring = None
+        if not self.output.get("publication", ""):
+            publication = self.data.get("publication", "")
+            pagination = self.data.get("pagination", "")
+            pubstring = ""
             if publication:
-                journal = publication.get('pubName', None)
-                year = publication.get('pubYear', None)
-                volume = publication.get('volumeNum', None)
-                issue = publication.get('issueNum', None)
-                publisher = publication.get('publisher', None)
-                book = publication.get('bookSeries', {}).get('seriesName', None)
-                conf = publication.get('confName', None)
-                dates = publication.get('confDates', None)
+                journal = publication.get("pubName", "")
+                year = publication.get("pubYear", "")
+                volume = publication.get("volumeNum", "")
+                issue = publication.get("issueNum", "")
+                publisher = publication.get("publisher", "")
+                book = publication.get("bookSeries", {}).get("seriesName", "")
+                conf = publication.get("confName", "")
+                dates = publication.get("confDates", "")
                 editors = self._get_editors()
                 if journal:
                     pubstring = journal
@@ -398,11 +398,11 @@ class Translator(object):
                     else:
                         pubstring = 'Issue ' + issue
             if pagination:
-                pagerange = pagination.get('pageRange', None)
-                pagecount = pagination.get('pageCount', None)
-                idno = pagination.get('electronicID', None)
-                firstp = pagination.get('firstPage', None)
-                lastp = pagination.get('lastPage', None)
+                pagerange = pagination.get("pageRange", "")
+                pagecount = pagination.get("pageCount", "")
+                idno = pagination.get("electronicID", "")
+                firstp = pagination.get("firstPage", "")
+                lastp = pagination.get("lastPage", "")
                 if (firstp and lastp) and not pagerange:
                     pagerange = firstp + '-' + lastp
                 if pagerange:
