@@ -175,20 +175,21 @@ class Translator(object):
             affil_list = list()
             native_author_list = list()
             for a in authors:
-                # person
                 name = a.get('name', None)
+                # individual (person or collab)
                 if name:
                     # person name
                     (auth, native_auth) = self._get_name(name)
-                    # person attribs and affil
-                    aff = self._get_affil(a)
-                    if aff == 'None':
-                        aff = ''
-                    if native_auth == 'None':
-                        native_auth = ''
-                    author_list.append(auth)
-                    native_author_list.append(native_auth)
-                    affil_list.append(aff)
+                    if auth not in author_list:
+                        # person attribs and affil
+                        aff = self._get_affil(a)
+                        if aff == 'None':
+                            aff = ''
+                        if native_auth == 'None':
+                            native_auth = ''
+                        author_list.append(auth)
+                        native_author_list.append(native_auth)
+                        affil_list.append(aff)
             self.output['authors'] = author_list
             self.output['affiliations'] = affil_list
             self.output['native_authors'] = native_author_list
