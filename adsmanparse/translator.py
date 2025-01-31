@@ -320,6 +320,8 @@ class Translator(object):
         openaccess = self.data.get('openAccess', {}).get('open', False)
         if openaccess:
             props['OPEN'] = 1
+        elif "creativecommons.org" in self.data.get('openAccess', {}).get('licenseURL', ''):
+            props['OPEN'] = 1
 
         if parsedfile:
             parsedFileName = self.data.get('recordData', {}).get('loadLocation', None)
