@@ -406,6 +406,10 @@ class Translator(object):
                 idno = pagination.get("electronicID", "")
                 firstp = pagination.get("firstPage", "")
                 lastp = pagination.get("lastPage", "")
+                if firstp == "NP":
+                    firstp = ""
+                if lastp == "NP":
+                    lastp = ""
                 if (firstp and lastp) and not pagerange:
                     pagerange = firstp + '-' + lastp
                 if pagerange:
