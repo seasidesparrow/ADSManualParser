@@ -407,25 +407,25 @@ class Translator(object):
                 idno = pagination.get("electronicID", "")
                 firstp = pagination.get("firstPage", "")
                 lastp = pagination.get("lastPage", "")
-                if firstp == "NP":
-                    firstp = ""
-                if lastp == "NP":
-                    lastp = ""
-                if (firstp and lastp) and not pagerange:
-                    pagerange = firstp + '-' + lastp
-                if pagerange:
-                    if pubstring:
-                        pubstring = pubstring + ', pp. ' + pagerange
-                    else:
-                        pubstring = 'pp. ' + pagerange
-                elif firstp:
-                    if pubstring:
-                        pubstring = pubstring + ', page ' + firstp
-                elif idno:
-                    if pubstring:
-                        pubstring = pubstring + ', id.' + idno
-                    else:
-                        pubstring = 'id.' + idno
+                if firstp == "NP" and lastp == "NP":
+                    pagination = ""
+                    self.data["pagination"] = pagination
+                else:
+                    if (firstp and lastp) and not pagerange:
+                        pagerange = firstp + '-' + lastp
+                    if pagerange:
+                        if pubstring:
+                            pubstring = pubstring + ', pp. ' + pagerange
+                        else:
+                            pubstring = 'pp. ' + pagerange
+                    elif firstp:
+                        if pubstring:
+                            pubstring = pubstring + ', page ' + firstp
+                    elif idno:
+                        if pubstring:
+                            pubstring = pubstring + ', id.' + idno
+                        else:
+                            pubstring = 'id.' + idno
                 if pagecount:
                     pubstring = pubstring + ', ' + pagecount + ' pp.'
             if pubstring:
