@@ -18,9 +18,10 @@ class Translator(object):
     '''
 
     # INITIALIZATION
-    def __init__(self, data=None, **kwargs):
+    def __init__(self, data=None, doibib={}, **kwargs):
         self.data = data
         self.output = dict()
+        self.doibib = doibib
         return
 
     # DETAGGER (from jats.py)
@@ -434,7 +435,13 @@ class Translator(object):
 
     def _get_bibcode(self, bibstem=None, volume=None):
         try:
-            self.output['bibcode'] = bibgen.make_bibcode(self.data, bibstem=bibstem, volume=volume)
+            doi = self.data.get("persistentIDs", {}).get("DOI", None)
+            if doi and self.doibib:
+                doi_bibcode = self.doibib.get(doi, None)
+                if doi_bibcode:
+                    self.output['bibcode'] = doi_bibcode
+            if not self.output.get('bibcode', None):
+                self.output['bibcode'] = bibgen.make_bibcode(self.data, bibstem=bibstem, volume=volume)
         except Exception as err:
             print('Couldnt make a bibcode: %s' % str(err))
 
