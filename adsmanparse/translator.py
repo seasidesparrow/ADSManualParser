@@ -435,7 +435,10 @@ class Translator(object):
 
     def _get_bibcode(self, bibstem=None, volume=None):
         try:
-            doi = self.data.get("persistentIDs", {}).get("DOI", None)
+            pids = self.data.get("persistentIDs", [])
+            for id in pids:
+                if "DOI" in id.keys():
+                    doi = id.get("DOI", None)
             if doi and self.doibib:
                 doi_bibcode = self.doibib.get(doi, None)
                 if doi_bibcode:
