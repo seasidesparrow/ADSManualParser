@@ -34,7 +34,7 @@ def load_doi_bibcode(infile):
                     if doi_bibc.get(doi, None):
                         doi_bibc[doi] = bibcode
                     else:
-                        print("WARNING: multiple canonical bibs for one DOI: %s\t%s\t%s" % (doi, doi_bibc[doi], bibcode)
+                        print("WARNING: multiple canonical bibs for one DOI: %s\t%s\t%s" % (doi, doi_bibc[doi], bibcode))
     except Exception as err:
         print("Failed to load doi-bibcode mapping: %s" % err)
     return doi_bibc
