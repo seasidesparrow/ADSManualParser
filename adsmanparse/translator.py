@@ -441,7 +441,7 @@ class Translator(object):
                     doi = id.get("DOI", None)
             if doi and self.doibib:
                 doi_bibcode = self.doibib.get(doi, None)
-                if doi_bibcode:
+                if doi_bibcode and ".tmp" not in doi_bibcode:
                     self.output['bibcode'] = doi_bibcode
             if not self.output.get('bibcode', None):
                 self.output['bibcode'] = bibgen.make_bibcode(self.data, bibstem=bibstem, volume=volume)
