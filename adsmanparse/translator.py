@@ -437,8 +437,10 @@ class Translator(object):
         try:
             pids = self.data.get("persistentIDs", [])
             for id in pids:
-                if "DOI" in id.keys():
+                if "DOI" in id.keys() or "doi" in id.keys():
                     doi = id.get("DOI", None)
+                    if not doi:
+                        doi = id.get("doi", None)
                     if doi and self.doibib:
                         doi_bibcode = self.doibib.get(doi, None)
                         if doi_bibcode and ".tmp" not in doi_bibcode:
