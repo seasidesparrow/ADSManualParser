@@ -30,10 +30,11 @@ def load_doi_bibcode(infile):
         with open(infile, "r") as fd:
             for l in fd.readlines():
                 (bibcode, doi) = l.strip().split("\t")
-                if doi_bibc.get(doi, None):
-                    doi_bibc[doi].append(bibcode)
-                else:
-                    doi_bibc[doi] = [bibcode]
+                if "\.tmp" not in bibcode:
+                    if doi_bibc.get(doi, None):
+                        doi_bibc[doi] = bibcode
+                    else:
+                        print("WARNING: multiple canonical bibs for one DOI: %s\t%s\t%s" % (doi, doi_bibc[doi], bibcode)
     except Exception as err:
         print("Failed to load doi-bibcode mapping: %s" % err)
     return doi_bibc
