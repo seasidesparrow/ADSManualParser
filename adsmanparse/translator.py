@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import re
 
 fix_ampersand = re.compile(r"(&amp;)(.*?)(;)")
+check_alphanumeric = re.compile(r"[A-Za-z]")
 
 try:
     bibgen = BibcodeGenerator()
@@ -407,6 +408,9 @@ class Translator(object):
                 idno = pagination.get("electronicID", "")
                 firstp = pagination.get("firstPage", "")
                 lastp = pagination.get("lastPage", "")
+                # Wiley special case
+                if (firstp in idno) and check_alphanumeric(firstp):
+                    firstp = ""
                 if firstp == "NP" and lastp == "NP":
                     pagination = ""
                     self.data["pagination"] = pagination
