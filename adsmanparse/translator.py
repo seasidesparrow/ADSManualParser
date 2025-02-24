@@ -409,7 +409,7 @@ class Translator(object):
                 firstp = pagination.get("firstPage", "")
                 lastp = pagination.get("lastPage", "")
                 # Wiley special case
-                if (firstp in idno) and check_alphanumeric(firstp):
+                if (firstp in idno) and check_alphanumeric.findall(firstp):
                     firstp = ""
                 if firstp == "NP" and lastp == "NP":
                     pagination = ""
