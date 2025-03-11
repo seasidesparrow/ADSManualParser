@@ -434,6 +434,15 @@ class Translator(object):
                     pubstring = pubstring + ', ' + pagecount + ' pp.'
             if pubstring:
                 self.output['publication'] = pubstring
+            else:
+                # check for arXiv indicators
+                pubids = self.data.get("publisherIDs")
+                for pid in pubids:
+                    urn = pid.get("urn", "")
+                    if urn and "arXiv.org" in urn:
+                        ident = urn.split(':')[2]
+                        self.output['publication'] = "eprint arXiv:%s" % ident
+                        break
             if publisher == 'Zenodo':
                 self.output['source'] = publisher
 
@@ -507,6 +516,16 @@ class Translator(object):
                 if a.get('contrib', {}):
                     new_authors.append(a['contrib'])
             self.data['authors'] = new_authors
+
+    def _get_comments(self):
+        if self.data.get("comments", []):
+            com_list = []
+            for com in self.data.get("comments"):
+                if com.get("commentText", None):
+                    com_list.append(com.get("commentText"))
+            if com_list:
+                self.output["comments"] = "; ".join(com_list)
+                
                    
 
     def translate(self, data=None, publisher=None, bibstem=None, volume=None, parsedfile=False):
@@ -525,5 +544,6 @@ class Translator(object):
             self._get_references()
             self._get_properties(parsedfile)
             self._get_publication()
+            self._get_comments()
             self._get_bibcode(bibstem=bibstem, volume=volume)
             self._get_copyright()
