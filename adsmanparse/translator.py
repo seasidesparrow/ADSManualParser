@@ -438,11 +438,12 @@ class Translator(object):
                 # check for arXiv indicators
                 pubids = self.data.get("publisherIDs")
                 for pid in pubids:
-                    urn = pid.get("urn", "")
-                    if urn and "arXiv.org" in urn:
-                        ident = urn.split(':')[2]
-                        self.output['publication'] = "eprint arXiv:%s" % ident
-                        break
+                    if pid.get("attribute", None) == "urn":
+                        urn = pid.get("Identifier", "")
+                        if urn and "arXiv.org" in urn:
+                            ident = urn.split(':')[2]
+                            self.output['publication'] = "eprint arXiv:%s" % ident
+                            break
             if publisher == 'Zenodo':
                 self.output['source'] = publisher
 
