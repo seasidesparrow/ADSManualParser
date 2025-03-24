@@ -36,6 +36,7 @@ logger = setup_logging(
     attach_stdout=conf.get("LOG_STDOUT", False),
 )
 
+doi_bibcode_dict = utils.load_doi_bibcode(conf.get("DOI_BIBCODE_MAP", "./all.links"))
 
 def get_args():
 
@@ -138,7 +139,7 @@ def get_args():
 
 def create_tagged(rec=None, args=None):
     try:
-        xlator = translator.Translator()
+        xlator = translator.Translator(doibib=doi_bibcode_dict)
         seri = classic_serializer.ClassicSerializer()
         xlator.translate(data=rec, bibstem=args.bibstem, volume=args.volume, parsedfile=args.parsedfile)
         output = seri.output(xlator.output)
@@ -303,6 +304,7 @@ def main():
     args = get_args()
     rawDataList = []
     ingestDocList = []
+
 
     logger.debug("Initiating parsing with the following arguments: %s" % str(args))
 

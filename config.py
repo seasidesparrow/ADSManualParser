@@ -46,6 +46,7 @@ DEPRECATED_TITLES=[
     r'^[OI][BF]C',
     r'Forthcoming\smeeting',
     r'advertisement',
+    r'Frontmatter',
     r'Front\scover',
     r'Back\scover',
     r'Blank\spage',

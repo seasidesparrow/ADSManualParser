@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import re
 
 fix_ampersand = re.compile(r"(&amp;)(.*?)(;)")
+check_alphanumeric = re.compile(r"[A-Za-z]")
 
 try:
     bibgen = BibcodeGenerator()
@@ -18,9 +19,10 @@ class Translator(object):
     '''
 
     # INITIALIZATION
-    def __init__(self, data=None, **kwargs):
+    def __init__(self, data=None, doibib={}, **kwargs):
         self.data = data
         self.output = dict()
+        self.doibib = doibib
         return
 
     # DETAGGER (from jats.py)
@@ -406,31 +408,59 @@ class Translator(object):
                 idno = pagination.get("electronicID", "")
                 firstp = pagination.get("firstPage", "")
                 lastp = pagination.get("lastPage", "")
-                if (firstp and lastp) and not pagerange:
-                    pagerange = firstp + '-' + lastp
-                if pagerange:
-                    if pubstring:
-                        pubstring = pubstring + ', pp. ' + pagerange
-                    else:
-                        pubstring = 'pp. ' + pagerange
-                elif firstp:
-                    if pubstring:
-                        pubstring = pubstring + ', page ' + firstp
-                elif idno:
-                    if pubstring:
-                        pubstring = pubstring + ', id.' + idno
-                    else:
-                        pubstring = 'id.' + idno
+                # Wiley special case
+                if (firstp in idno) and check_alphanumeric.findall(firstp):
+                    firstp = ""
+                if firstp == "NP" and lastp == "NP":
+                    pagination = ""
+                    self.data["pagination"] = pagination
+                else:
+                    if (firstp and lastp) and not pagerange:
+                        pagerange = firstp + '-' + lastp
+                    if pagerange:
+                        if pubstring:
+                            pubstring = pubstring + ', pp. ' + pagerange
+                        else:
+                            pubstring = 'pp. ' + pagerange
+                    elif firstp:
+                        if pubstring:
+                            pubstring = pubstring + ', page ' + firstp
+                    elif idno:
+                        if pubstring:
+                            pubstring = pubstring + ', id.' + idno
+                        else:
+                            pubstring = 'id.' + idno
                 if pagecount:
                     pubstring = pubstring + ', ' + pagecount + ' pp.'
             if pubstring:
                 self.output['publication'] = pubstring
+            else:
+                # check for arXiv indicators
+                pubids = self.data.get("publisherIDs")
+                for pid in pubids:
+                    if pid.get("attribute", None) == "urn":
+                        urn = pid.get("Identifier", "")
+                        if urn and "arXiv.org" in urn:
+                            ident = urn.split(':')[2]
+                            self.output['publication'] = "eprint arXiv:%s" % ident
+                            break
             if publisher == 'Zenodo':
                 self.output['source'] = publisher
 
     def _get_bibcode(self, bibstem=None, volume=None):
         try:
-            self.output['bibcode'] = bibgen.make_bibcode(self.data, bibstem=bibstem, volume=volume)
+            pids = self.data.get("persistentIDs", [])
+            for id in pids:
+                if "DOI" in id.keys() or "doi" in id.keys():
+                    doi = id.get("DOI", None)
+                    if not doi:
+                        doi = id.get("doi", None)
+                    if doi and self.doibib:
+                        doi_bibcode = self.doibib.get(doi, None)
+                        if doi_bibcode and ".tmp" not in doi_bibcode:
+                            self.output['bibcode'] = doi_bibcode
+            if not self.output.get('bibcode', None):
+                self.output['bibcode'] = bibgen.make_bibcode(self.data, bibstem=bibstem, volume=volume)
         except Exception as err:
             print('Couldnt make a bibcode: %s' % str(err))
 
@@ -487,6 +517,16 @@ class Translator(object):
                 if a.get('contrib', {}):
                     new_authors.append(a['contrib'])
             self.data['authors'] = new_authors
+
+    def _get_comments(self):
+        if self.data.get("comments", []):
+            com_list = []
+            for com in self.data.get("comments"):
+                if com.get("commentText", None):
+                    com_list.append(com.get("commentText"))
+            if com_list:
+                self.output["comments"] = "; ".join(com_list)
+                
                    
 
     def translate(self, data=None, publisher=None, bibstem=None, volume=None, parsedfile=False):
@@ -505,5 +545,6 @@ class Translator(object):
             self._get_references()
             self._get_properties(parsedfile)
             self._get_publication()
+            self._get_comments()
             self._get_bibcode(bibstem=bibstem, volume=volume)
             self._get_copyright()
