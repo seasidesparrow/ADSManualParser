@@ -1,5 +1,5 @@
-git+https://github.com/adsabs/ADSIngestParser@v0.9.36
-git+https://github.com/adsabs/ADSIngestEnrichment@v0.9.20
+git+https://github.com/adsabs/ADSIngestParser@v0.9.38
+git+https://github.com/adsabs/ADSIngestEnrichment@v0.9.23
 adsputils==1.5.2
 habanero==0.7.4
 namedentities==1.9.4

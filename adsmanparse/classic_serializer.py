@@ -34,6 +34,7 @@ class ClassicSerializer(object):
 
     def __init__(self, **kwargs):
         self.AFF_LABEL = self._aff_codes_generator()
+        self.TAG_REFS = kwargs.get("tag_refs", False)
         self.FIELD_DICT = OrderedDict([
             ('bibcode', {'tag': 'R'}),
             ('title', {'tag': 'T'}),
@@ -67,6 +68,9 @@ class ClassicSerializer(object):
 
     def output(self, record):
         output_text = []
+        if self.TAG_REFS:
+            record["references"] = record["refhandler_list"]
+            del record["refhandler_list"]
         for k, v in self.FIELD_DICT.items():
             rec_field = record.get(k, None)
             if k == "affiliations" or k == "native_authors":
