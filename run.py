@@ -133,6 +133,13 @@ def get_args():
                         default=False,
                         help='Write doi-harvested records to xml file')
 
+    parser.add_argument('-Z',
+                        '--tagged_refs',
+                        dest='tagged_refs',
+                        action='store_true',
+                        default=False,
+                        help='Output refs in tagged file (%%Z)')
+
 
     args = parser.parse_args()
     return args
@@ -140,7 +147,7 @@ def get_args():
 def create_tagged(rec=None, args=None):
     try:
         xlator = translator.Translator(doibib=doi_bibcode_dict)
-        seri = classic_serializer.ClassicSerializer()
+        seri = classic_serializer.ClassicSerializer(tag_refs=args.tagged_refs)
         xlator.translate(data=rec, bibstem=args.bibstem, volume=args.volume, parsedfile=args.parsedfile)
         output = seri.output(xlator.output)
         return output
@@ -173,10 +180,11 @@ def write_xml(inputRecord):
         logger.warning("Export of doi (%s) to xml failed: %s" % (doi, err))
     
 
-def create_refs(rec=None, args=None):
+def create_refs(rec=None, args=None, bibcode=None):
     try:
         rw = ReferenceWriter(reference_directory=args.ref_dir,
                              reference_source=args.source,
+                             bibcode=bibcode,
                              data=rec)
         rw.write_references_to_file()
     except Exception as err:
@@ -188,8 +196,18 @@ def write_record(record, args):
         if tagged:
             with open(args.output_file, "a") as fout:
                 fout.write("%s\n" % tagged)
+            tagged_list = tagged.split("\n")
+            bibcode=None
+            for l in tagged_list:
+                try:
+                    (tag, value) = l.strip().split()
+                    if tag == "%R":
+                        bibcode=value
+                        break
+                except Exception as noop:
+                    pass
             if args.write_refs:
-                create_refs(rec=record, args=args)
+                create_refs(rec=record, bibcode=bibcode, args=args)
         else:
             raise Exception("Tagged record not generated.")
     else:
@@ -199,7 +217,7 @@ def write_record(record, args):
 def parse_record(rec):
     pdata = rec.get('data', None)
     ptype = rec.get('type', None)
-    filename = rec.get('name', None)
+    filename = rec.get('name', "")
     parser = PARSER_TYPES.get(ptype, None)
     write_file = utils.has_body(pdata)
     parsedrecord = None
@@ -241,7 +259,7 @@ def process_record(rec, args):
             else:
                 logger.debug("Successfully processed %s with %s" % (rec.get("name", None), str(args)))
     except Exception as err:
-        logger.error("Error parsing and processing record %s: %s" % (rec.get("name", None), err))
+        logger.error("Error parsing and processing record %s: %s" % (rec.get("name", ""), err))
 
 
 def process_filepath(args):
