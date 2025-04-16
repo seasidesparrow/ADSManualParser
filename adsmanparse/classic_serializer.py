@@ -54,7 +54,7 @@ class ClassicSerializer(object):
             ('page', {'tag': 'P'}),
             ('abstract', {'tag': 'B'}),
             ('properties', {'tag': 'I', 'join': '; '}),
-            ('references', {'tag': 'Z', 'join': "\n   "}),])
+            ('references', {'tag': 'Z', 'join': "\n"}),])
         pass
 
     def _format_affil_field(self, affils):
@@ -69,8 +69,9 @@ class ClassicSerializer(object):
     def output(self, record):
         output_text = []
         if self.TAG_REFS:
-            record["references"] = record["refhandler_list"]
-            del record["refhandler_list"]
+            if record.get("refhandler_list", None):
+                record["references"] = record["refhandler_list"]
+                del record["refhandler_list"]
         for k, v in self.FIELD_DICT.items():
             rec_field = record.get(k, None)
             if k == "affiliations" or k == "native_authors":

@@ -135,7 +135,7 @@ def get_args():
 
     parser.add_argument('-Z',
                         '--tagged_refs',
-                        dest='tagged_refs'
+                        dest='tagged_refs',
                         action='store_true',
                         default=False,
                         help='Output refs in tagged file (%%Z)')
@@ -147,9 +147,9 @@ def get_args():
 def create_tagged(rec=None, args=None):
     try:
         xlator = translator.Translator(doibib=doi_bibcode_dict)
-        seri = classic_serializer.ClassicSerializer()
+        seri = classic_serializer.ClassicSerializer(tag_refs=args.tagged_refs)
         xlator.translate(data=rec, bibstem=args.bibstem, volume=args.volume, parsedfile=args.parsedfile)
-        output = seri.output(xlator.output, tag_refs=args.tagged_refs)
+        output = seri.output(xlator.output)
         return output
     except Exception as err:
         logger.warning("Export to tagged file failed: %s\t%s" % (err, rec))
@@ -217,7 +217,7 @@ def write_record(record, args):
 def parse_record(rec):
     pdata = rec.get('data', None)
     ptype = rec.get('type', None)
-    filename = rec.get('name', None)
+    filename = rec.get('name', "")
     parser = PARSER_TYPES.get(ptype, None)
     write_file = utils.has_body(pdata)
     parsedrecord = None
