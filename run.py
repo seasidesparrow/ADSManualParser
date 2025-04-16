@@ -231,8 +231,6 @@ def parse_record(rec):
             else:
                 parsedrecord = parser.parse(pdata)
             if parsedrecord:
-                with open("asdf.json","w") as fo:
-                    fo.write("%s\n" % json.dumps(parsedrecord, indent=2, sort_keys=True))
                 if utils.suppress_title(parsedrecord, conf.get("DEPRECATED_TITLES", [])):
                     parsedrecord = None
                     raise Exception("Warning: article matches a suppressed title.")
