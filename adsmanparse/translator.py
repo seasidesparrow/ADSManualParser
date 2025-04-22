@@ -436,7 +436,7 @@ class Translator(object):
                 self.output['publication'] = pubstring
             else:
                 # check for arXiv indicators
-                pubids = self.data.get("publisherIDs")
+                pubids = self.data.get("publisherIDs", [])
                 for pid in pubids:
                     if pid.get("attribute", None) == "urn":
                         urn = pid.get("Identifier", "")
