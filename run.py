@@ -140,19 +140,59 @@ def get_args():
                         default=False,
                         help='Output refs in tagged file (%%Z)')
 
+    parser.add_argument('-I',
+                        '--id_page',
+                        dest='id_page',
+                        action='store_true',
+                        default=False,
+                        help='Use id in place of page')
+
 
     args = parser.parse_args()
     return args
 
+def move_pubid(record):
+    try:
+        pubids = record.get("publisherIDs", [])
+        pid = None
+        for p in pubids:
+            if p.get("attribute", "") == "publisher-id":
+                pid = p.get("Identifier", "")
+        if pid:
+            pagination = record.get("pagination", {})
+            #split on hyphen
+            lp = pid.split("-")[-1]
+            if lp:
+                del(pagination["firstPage"])
+                del(pagination["lastPage"])
+                del(pagination["pageRange"])
+                pagination["electronicID"] = lp
+                record["pagination"] = pagination
+        else:
+            raise Exception("lol, nope")
+             
+    except Exception as err:
+        logger.warning("Failed to convert pubid to valid idno: %s" % err)
+    return record
+        
+
 def create_tagged(rec=None, args=None):
     try:
-        xlator = translator.Translator(doibib=doi_bibcode_dict)
+        xlator = translator.Translator(doibib=doi_bibcode_dict, idpage=args.id_page)
+    except Exception as err:
+        raise Exception("translator instantiation failed: %s" % err)
+    try:
         seri = classic_serializer.ClassicSerializer(tag_refs=args.tagged_refs)
+    except Exception as err:
+        raise Exception("serializer instantiation failed: %s" % err)
+    try:
         xlator.translate(data=rec, bibstem=args.bibstem, volume=args.volume, parsedfile=args.parsedfile)
         output = seri.output(xlator.output)
         return output
     except Exception as err:
-        logger.warning("Export to tagged file failed: %s\t%s" % (err, rec))
+        raise Exception("TRANSLATE failed: %s" % err)
+    #except Exception as err:
+    #    logger.warning("Export to tagged file failed: %s" % (err))
 
 
 def write_xml(inputRecord):
@@ -192,7 +232,11 @@ def create_refs(rec=None, args=None, bibcode=None):
 
 def write_record(record, args):
     if args.output_file:
-        tagged = create_tagged(rec=record, args=args)
+        tagged = None
+        try:
+            tagged = create_tagged(rec=record, args=args)
+        except Exception as err:
+            logger.warning("Failed to create_tagged record: %s" % err)
         if tagged:
             with open(args.output_file, "a") as fout:
                 fout.write("%s\n" % tagged)
@@ -252,12 +296,15 @@ def process_record(rec, args):
         if not parsedRecord:
             logger.error("Parsing yielded no data for %s" % rec.get("name", None))
         else:
+            if args.id_page:
+               parsedRecord = move_pubid(parsedRecord)
             try:
                 write_record(parsedRecord, args)
             except Exception as err:
-                logger.error("Classic tagger did not generate a tagged record for %s" % f)
+                logger.error("Classic tagger did not generate a tagged record for %s" % err)
             else:
-                logger.debug("Successfully processed %s with %s" % (rec.get("name", None), str(args)))
+                #logger.debug("Successfully processed %s with %s" % (rec.get("name", None), str(args)))
+                pass
     except Exception as err:
         logger.error("Error parsing and processing record %s: %s" % (rec.get("name", ""), err))
 
@@ -266,6 +313,7 @@ def process_filepath(args):
     if args.proc_path:
         logger.info("Finding files in path %s ..." % args.proc_path)
         infiles = [x for x in iglob(args.proc_path, recursive=True)]
+        infiles = infiles[0:10]
         if not infiles:
             logger.warning("No files found in path %s." % args.proc_path)
         else:
@@ -291,7 +339,10 @@ def process_filepath(args):
                     except Exception as err:
                         logger.warning("Failed to read input file %s: %s" % (f, err))
                     else:
-                        process_record(inputRecord, args)
+                        try:
+                            process_record(inputRecord, args)
+                        except Exception as err:
+                            logger.warning("Process record failed: %s" % err)
     else:
         logger.warning("Null processing path given, nothing processed.")
 

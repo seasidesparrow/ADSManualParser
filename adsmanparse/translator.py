@@ -19,10 +19,11 @@ class Translator(object):
     '''
 
     # INITIALIZATION
-    def __init__(self, data=None, doibib={}, **kwargs):
+    def __init__(self, data=None, doibib={}, idpage=False, **kwargs):
         self.data = data
         self.output = dict()
         self.doibib = doibib
+        self.idpage = idpage
         return
 
     # DETAGGER (from jats.py)
@@ -228,7 +229,7 @@ class Translator(object):
 
 
     def _get_date(self):
-        pubdate = self.data.get('pubDate', None)
+        pubdate = self.data.get('pubDate', {})
 
         # what dates are available?
         printdate = pubdate.get('printDate', None)
@@ -362,8 +363,8 @@ class Translator(object):
 
     def _get_publication(self):
         if not self.output.get("publication", ""):
-            publication = self.data.get("publication", "")
-            pagination = self.data.get("pagination", "")
+            publication = self.data.get("publication", {})
+            pagination = self.data.get("pagination", {})
             pubstring = ""
             if publication:
                 journal = publication.get("pubName", "")
@@ -417,7 +418,12 @@ class Translator(object):
                 else:
                     if (firstp and lastp) and not pagerange:
                         pagerange = firstp + '-' + lastp
-                    if pagerange:
+                    if self.idpage and idno:
+                        if pubstring:
+                            pubstring = pubstring + ', id.' + idno
+                        else:
+                            pubstring = 'id.' + idno
+                    elif pagerange:
                         if pubstring:
                             pubstring = pubstring + ', pp. ' + pagerange
                         else:
@@ -436,7 +442,7 @@ class Translator(object):
                 self.output['publication'] = pubstring
             else:
                 # check for arXiv indicators
-                pubids = self.data.get("publisherIDs")
+                pubids = self.data.get("publisherIDs", [])
                 for pid in pubids:
                     if pid.get("attribute", None) == "urn":
                         urn = pid.get("Identifier", "")
@@ -537,14 +543,47 @@ class Translator(object):
         else:
             if bibstem:
                 self._special_handling(bibstem)
-            self._get_title()
-            self._get_abstract()
-            self._get_keywords()
-            self._get_auths_affils()
-            self._get_date()
-            self._get_references()
-            self._get_properties(parsedfile)
-            self._get_publication()
-            self._get_comments()
-            self._get_bibcode(bibstem=bibstem, volume=volume)
-            self._get_copyright()
+            try:
+                self._get_title()
+            except Exception as err:
+                raise Exception("get_title failed: %s" % err)
+            try:
+                self._get_abstract()
+            except Exception as err:
+                raise Exception("get_abstract failed: %s" % err)
+            try:
+                self._get_keywords()
+            except Exception as err:
+                raise Exception("get_keywords failed: %s" % err)
+            try:
+                self._get_auths_affils()
+            except Exception as err:
+                raise Exception("get_auths_affils failed: %s" % err)
+            try:
+                self._get_date()
+            except Exception as err:
+                raise Exception("get_date failed: %s" % err)
+            try:
+                self._get_references()
+            except Exception as err:
+                raise Exception("get_references failed: %s" % err)
+            try:
+                self._get_properties(parsedfile)
+            except Exception as err:
+                raise Exception("get_properties failed: %s" % err)
+            try:
+                self._get_publication()
+            except Exception as err:
+                raise Exception("get_publication failed: %s" % err)
+            try:
+                self._get_comments()
+            except Exception as err:
+                raise Exception("get_comments failed: %s" % err)
+            try:
+                self._get_bibcode(bibstem=bibstem, volume=volume)
+            except Exception as err:
+                raise Exception("get_bibcode failed: %s" % err)
+            try:
+                self._get_copyright()
+            except Exception as err:
+                raise Exception("get_copyright failed: %s" % err)
