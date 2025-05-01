@@ -313,7 +313,6 @@ def process_filepath(args):
     if args.proc_path:
         logger.info("Finding files in path %s ..." % args.proc_path)
         infiles = [x for x in iglob(args.proc_path, recursive=True)]
-        infiles = infiles[0:10]
         if not infiles:
             logger.warning("No files found in path %s." % args.proc_path)
         else:
