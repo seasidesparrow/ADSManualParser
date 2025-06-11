@@ -412,6 +412,8 @@ class Translator(object):
                 # Wiley special case
                 if (firstp in idno) and check_alphanumeric.findall(firstp):
                     firstp = ""
+                elif firstp and idno and check_alphanumeric.findall(firstp):
+                    firstp = ""
                 if firstp == "NP" and lastp == "NP":
                     pagination = ""
                     self.data["pagination"] = pagination
@@ -432,6 +434,7 @@ class Translator(object):
                         if pubstring:
                             pubstring = pubstring + ', page ' + firstp
                     elif idno:
+                        self.data["pagination"] = {"electronicID": idno}
                         if pubstring:
                             pubstring = pubstring + ', id.' + idno
                         else:

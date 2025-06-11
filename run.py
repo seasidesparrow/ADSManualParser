@@ -177,7 +177,7 @@ def move_pubid(record):
                 record["pagination"] = pagination
         else:
             raise Exception("Didn't find a publisher id for page.id")
-             
+
     except Exception as err:
         logger.warning("Failed to convert pubid to valid idno: %s" % err)
     return record
@@ -207,7 +207,7 @@ def move_doiid(record):
     except Exception as err:
         logger.warning("Failed to convert doi to valid idno: %s" % err)
     return record
-        
+
 
 def create_tagged(rec=None, args=None):
     try:
@@ -251,7 +251,7 @@ def write_xml(inputRecord):
             raise Exception("This is not a crossref file.")
     except Exception as err:
         logger.warning("Export of doi (%s) to xml failed: %s" % (doi, err))
-    
+
 
 def create_refs(rec=None, args=None, bibcode=None):
     try:
@@ -419,7 +419,7 @@ def main():
         # This route processes data from user-input files
         if args.proc_path:
             process_filepath(args)
-            
+
         # This route fetches data from Crossref via the Habanero module
         elif (args.fetch_doi or args.fetch_doi_list):
             doiList = None
