@@ -147,6 +147,13 @@ def get_args():
                         default=False,
                         help='Use id in place of page')
 
+    parser.add_argument('-D',
+                        '--doi_page',
+                        dest='doi_page',
+                        action='store_true',
+                        default=False,
+                        help='Use DOI in place of page')
+
 
     args = parser.parse_args()
     return args
@@ -169,10 +176,36 @@ def move_pubid(record):
                 pagination["electronicID"] = lp
                 record["pagination"] = pagination
         else:
-            raise Exception("lol, nope")
+            raise Exception("Didn't find a publisher id for page.id")
              
     except Exception as err:
         logger.warning("Failed to convert pubid to valid idno: %s" % err)
+    return record
+
+def move_doiid(record):
+    try:
+        persistentids = record.get("persistentIDs", [])
+        doi = None
+        for p in persistentids:
+            if p.get("DOI", None):
+                doi = p["DOI"]
+                break
+        if doi:
+            pagination = record.get("pagination", {})
+            first = pagination.get("firstPage", None)
+            rangefirst = pagination.get("pageRange", "").split("-")[0]
+            if first == "1" or rangefirst == "1":
+                doiid = doi.split("/")[-1]
+                del(pagination["firstPage"])
+                del(pagination["lastPage"])
+                del(pagination["pageRange"])
+                pagination["electronicID"] = doiid
+                record["pagination"] = pagination
+        else:
+            raise Exception("Didn't find a DOI for page.id")
+
+    except Exception as err:
+        logger.warning("Failed to convert doi to valid idno: %s" % err)
     return record
         
 
@@ -298,6 +331,9 @@ def process_record(rec, args):
         else:
             if args.id_page:
                parsedRecord = move_pubid(parsedRecord)
+            elif args.doi_page:
+               parsedRecord = move_doiid(parsedRecord)
+               args.id_page = args.doi_page
             try:
                 write_record(parsedRecord, args)
             except Exception as err:
