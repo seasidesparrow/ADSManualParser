@@ -170,9 +170,12 @@ def move_pubid(record):
             #split on hyphen
             lp = pid.split("-")[-1]
             if lp:
-                del(pagination["firstPage"])
-                del(pagination["lastPage"])
-                del(pagination["pageRange"])
+                try:
+                    del(pagination["firstPage"])
+                    del(pagination["lastPage"])
+                    del(pagination["pageRange"])
+                except Exception:
+                    pass
                 pagination["electronicID"] = lp
                 record["pagination"] = pagination
         else:
@@ -192,13 +195,16 @@ def move_doiid(record):
                 break
         if doi:
             pagination = record.get("pagination", {})
-            first = pagination.get("firstPage", None)
+            first = pagination.get("firstPage", "")
             rangefirst = pagination.get("pageRange", "").split("-")[0]
             if first == "1" or rangefirst == "1":
                 doiid = doi.split("/")[-1]
-                del(pagination["firstPage"])
-                del(pagination["lastPage"])
-                del(pagination["pageRange"])
+                try:
+                    del(pagination["firstPage"])
+                    del(pagination["lastPage"])
+                    del(pagination["pageRange"])
+                except Exception:
+                    pass
                 pagination["electronicID"] = doiid
                 record["pagination"] = pagination
         else:
@@ -211,7 +217,7 @@ def move_doiid(record):
 
 def create_tagged(rec=None, args=None):
     try:
-        xlator = translator.Translator(doibib=doi_bibcode_dict, idpage=args.id_page)
+        xlator = translator.Translator(doibib=doi_bibcode_dict, idpage=args.id_page, doipage=args.doi_page)
     except Exception as err:
         raise Exception("translator instantiation failed: %s" % err)
     try:
@@ -224,8 +230,6 @@ def create_tagged(rec=None, args=None):
         return output
     except Exception as err:
         raise Exception("TRANSLATE failed: %s" % err)
-    #except Exception as err:
-    #    logger.warning("Export to tagged file failed: %s" % (err))
 
 
 def write_xml(inputRecord):
@@ -333,7 +337,6 @@ def process_record(rec, args):
                parsedRecord = move_pubid(parsedRecord)
             elif args.doi_page:
                parsedRecord = move_doiid(parsedRecord)
-               args.id_page = args.doi_page
             try:
                 write_record(parsedRecord, args)
             except Exception as err:

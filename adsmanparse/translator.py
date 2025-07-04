@@ -19,11 +19,12 @@ class Translator(object):
     '''
 
     # INITIALIZATION
-    def __init__(self, data=None, doibib={}, idpage=False, **kwargs):
+    def __init__(self, data=None, doibib={}, idpage=False, doipage=False, **kwargs):
         self.data = data
         self.output = dict()
         self.doibib = doibib
         self.idpage = idpage
+        self.doipage = doipage
         return
 
     # DETAGGER (from jats.py)
@@ -420,7 +421,7 @@ class Translator(object):
                 else:
                     if (firstp and lastp) and not pagerange:
                         pagerange = firstp + '-' + lastp
-                    if self.idpage and idno:
+                    if (self.idpage or self.doipage) and idno:
                         if pubstring:
                             pubstring = pubstring + ', id.' + idno
                         else:
