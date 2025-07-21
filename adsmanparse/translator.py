@@ -91,6 +91,8 @@ class Translator(object):
         surname = name.get('surname', None)
         given_name = name.get('given_name', None)
         middle_name = name.get('middle_name', None)
+        prefix = name.get('prefix', None)
+        suffix = name.get('suffix', None)
         pubraw = name.get('pubraw', None)
         collab = name.get('collab', None)
         native = name.get('native_lang', None)
@@ -98,9 +100,13 @@ class Translator(object):
         if surname:
             outname = surname
             if given_name:
+                if prefix:
+                    given_name = prefix + ' ' + given_name
                 outname = outname + ', ' + given_name
                 if middle_name:
                     outname = outname + ' ' + middle_name
+            if suffix:
+                outname = outname + ', ' + suffix
         elif given_name:
             outname = given_name
         elif collab:
