@@ -176,9 +176,9 @@ def use_counter_page(output, bibstem):
             year = str(bibcode[0:4])
             page = bibcode[14:18]
             if page == "....":
-                page = counter.Counter().get_page(bibstem,
-                                                  year,
-                                                  counter_datafile)
+                page = str(counter.Counter().get_page(bibstem,
+                                                      year,
+                                                      counter_datafile))
                 page = page.rjust(4, ".")
             bibcode_new = bibcode[0:14]+page+bibcode[18]
             if bibcode_new != bibcode:
