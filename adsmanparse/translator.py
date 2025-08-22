@@ -545,7 +545,7 @@ class Translator(object):
                 
                    
 
-    def translate(self, data=None, publisher=None, bibstem=None, volume=None, parsedfile=False):
+    def translate(self, data=None, publisher=None, bibstem=None, volume=None, parsedfile=False, counter=False):
         if data:
             self.data = data
         if not self.data:

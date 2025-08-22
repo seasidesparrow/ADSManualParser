@@ -254,7 +254,7 @@ def create_tagged(rec=None, args=None):
     except Exception as err:
         raise Exception("serializer instantiation failed: %s" % err)
     try:
-        xlator.translate(data=rec, bibstem=args.bibstem, volume=args.volume, parsedfile=args.parsedfile, counter=args.counter_page)
+        xlator.translate(data=rec, bibstem=args.bibstem, volume=args.volume, parsedfile=args.parsedfile)
         if args.counter_page and xlator.output.get("bibcode", None):
             use_counter_page(xlator.output, args.bibstem)
         output = seri.output(xlator.output)

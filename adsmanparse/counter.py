@@ -51,12 +51,17 @@ class Counter(object):
             try:
                 bibdata = self._initialize_from_json(infile)
                 if bibdata.get(bibstem, {}):
-                    try:
-                        page = bibdata[bibstem].pop(year)
-                    except:
-                        page = 0
-                    newpage = page + 1
-                    bibdata[bibstem][year] = newpage
+                    if bibdata[bibstem].get("ALL", None):
+                        page = bibdata[bibstem]["ALL"]
+                        newpage = page + 1
+                        bibdata[bibstem]["ALL"] = newpage
+                    else:
+                        try:
+                            page = bibdata[bibstem].pop(year)
+                        except:
+                            page = 0
+                        newpage = page + 1
+                        bibdata[bibstem][year] = newpage
                 else:
                     newpage = 1
                     bibdata[bibstem]={year: newpage}
