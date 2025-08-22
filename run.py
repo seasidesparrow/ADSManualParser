@@ -11,7 +11,7 @@ from adsingestp.parsers.elsevier import ElsevierParser
 from adsingestp.parsers.adsfeedback import ADSFeedbackParser
 from adsingestp.parsers.copernicus import CopernicusParser
 from adsingestp.parsers.wiley import WileyParser
-from adsmanparse import translator, doiharvest, classic_serializer, utils
+from adsmanparse import translator, doiharvest, classic_serializer, utils, counter
 from adsputils import load_config, setup_logging
 from datetime import datetime, timedelta
 from glob import iglob
@@ -37,6 +37,8 @@ logger = setup_logging(
 )
 
 doi_bibcode_dict = utils.load_doi_bibcode(conf.get("DOI_BIBCODE_MAP", "./all.links"))
+
+counter_datafile = conf.get("COUNTER_DATAFILE", "./counter.json")
 
 def get_args():
 
@@ -154,9 +156,36 @@ def get_args():
                         default=False,
                         help='Use DOI in place of page')
 
+    parser.add_argument('-C',
+                        '--counter_page',
+                        dest='counter_page',
+                        action='store_true',
+                        default=False,
+                        help='Use a running counter in place of page')
+
 
     args = parser.parse_args()
     return args
+
+def use_counter_page(output, bibstem):
+    try:
+        bibcode = output.get("bibcode", None)
+        if bibcode:
+            if not bibstem:
+                bibstem = bibcode[4:9] 
+            year = str(bibcode[0:4])
+            page = bibcode[14:18]
+            if page == "....":
+                page = counter.Counter().get_page(bibstem,
+                                                  year,
+                                                  counter_datafile)
+                page = page.rjust(4, ".")
+            bibcode_new = bibcode[0:14]+page+bibcode[18]
+            if bibcode_new != bibcode:
+                output["bibcode"] = bibcode_new
+        return output
+    except Exception as err:
+        logger.warning("Failed to add counter page to bibcode: %s" % err)
 
 def move_pubid(record):
     try:
@@ -225,7 +254,9 @@ def create_tagged(rec=None, args=None):
     except Exception as err:
         raise Exception("serializer instantiation failed: %s" % err)
     try:
-        xlator.translate(data=rec, bibstem=args.bibstem, volume=args.volume, parsedfile=args.parsedfile)
+        xlator.translate(data=rec, bibstem=args.bibstem, volume=args.volume, parsedfile=args.parsedfile, counter=args.counter_page)
+        if args.counter_page and xlator.output.get("bibcode", None):
+            use_counter_page(xlator.output, args.bibstem)
         output = seri.output(xlator.output)
         return output
     except Exception as err:
