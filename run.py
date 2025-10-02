@@ -11,7 +11,7 @@ from adsingestp.parsers.elsevier import ElsevierParser
 from adsingestp.parsers.adsfeedback import ADSFeedbackParser
 from adsingestp.parsers.copernicus import CopernicusParser
 from adsingestp.parsers.wiley import WileyParser
-from adsmanparse import translator, doiharvest, classic_serializer, utils
+from adsmanparse import translator, doiharvest, classic_serializer, utils, counter
 from adsputils import load_config, setup_logging
 from datetime import datetime, timedelta
 from glob import iglob
@@ -37,6 +37,8 @@ logger = setup_logging(
 )
 
 doi_bibcode_dict = utils.load_doi_bibcode(conf.get("DOI_BIBCODE_MAP", "./all.links"))
+
+counter_datafile = conf.get("COUNTER_DATAFILE", "./counter.json")
 
 def get_args():
 
@@ -147,9 +149,43 @@ def get_args():
                         default=False,
                         help='Use id in place of page')
 
+    parser.add_argument('-D',
+                        '--doi_page',
+                        dest='doi_page',
+                        action='store_true',
+                        default=False,
+                        help='Use DOI in place of page')
+
+    parser.add_argument('-C',
+                        '--counter_page',
+                        dest='counter_page',
+                        action='store_true',
+                        default=False,
+                        help='Use a running counter in place of page')
+
 
     args = parser.parse_args()
     return args
+
+def use_counter_page(output, bibstem):
+    try:
+        bibcode = output.get("bibcode", None)
+        if bibcode:
+            if not bibstem:
+                bibstem = bibcode[4:9] 
+            year = str(bibcode[0:4])
+            page = bibcode[14:18]
+            if page == "....":
+                page = str(counter.Counter().get_page(bibstem,
+                                                      year,
+                                                      counter_datafile))
+                page = page.rjust(4, ".")
+            bibcode_new = bibcode[0:14]+page+bibcode[18]
+            if bibcode_new != bibcode:
+                output["bibcode"] = bibcode_new
+        return output
+    except Exception as err:
+        logger.warning("Failed to add counter page to bibcode: %s" % err)
 
 def move_pubid(record):
     try:
@@ -163,22 +199,54 @@ def move_pubid(record):
             #split on hyphen
             lp = pid.split("-")[-1]
             if lp:
-                del(pagination["firstPage"])
-                del(pagination["lastPage"])
-                del(pagination["pageRange"])
+                try:
+                    del(pagination["firstPage"])
+                    del(pagination["lastPage"])
+                    del(pagination["pageRange"])
+                except Exception:
+                    pass
                 pagination["electronicID"] = lp
                 record["pagination"] = pagination
         else:
-            raise Exception("lol, nope")
-             
+            raise Exception("Didn't find a publisher id for page.id")
+
     except Exception as err:
         logger.warning("Failed to convert pubid to valid idno: %s" % err)
     return record
-        
+
+def move_doiid(record):
+    try:
+        persistentids = record.get("persistentIDs", [])
+        doi = None
+        for p in persistentids:
+            if p.get("DOI", None):
+                doi = p["DOI"]
+                break
+        if doi:
+            pagination = record.get("pagination", {})
+            first = pagination.get("firstPage", "")
+            rangefirst = pagination.get("pageRange", "").split("-")[0]
+            if first == "1" or rangefirst == "1":
+                doiid = doi.split("/")[-1]
+                try:
+                    del(pagination["firstPage"])
+                    del(pagination["lastPage"])
+                    del(pagination["pageRange"])
+                except Exception:
+                    pass
+                pagination["electronicID"] = doiid
+                record["pagination"] = pagination
+        else:
+            raise Exception("Didn't find a DOI for page.id")
+
+    except Exception as err:
+        logger.warning("Failed to convert doi to valid idno: %s" % err)
+    return record
+
 
 def create_tagged(rec=None, args=None):
     try:
-        xlator = translator.Translator(doibib=doi_bibcode_dict, idpage=args.id_page)
+        xlator = translator.Translator(doibib=doi_bibcode_dict, idpage=args.id_page, doipage=args.doi_page)
     except Exception as err:
         raise Exception("translator instantiation failed: %s" % err)
     try:
@@ -187,12 +255,12 @@ def create_tagged(rec=None, args=None):
         raise Exception("serializer instantiation failed: %s" % err)
     try:
         xlator.translate(data=rec, bibstem=args.bibstem, volume=args.volume, parsedfile=args.parsedfile)
+        if args.counter_page and xlator.output.get("bibcode", None):
+            use_counter_page(xlator.output, args.bibstem)
         output = seri.output(xlator.output)
         return output
     except Exception as err:
         raise Exception("TRANSLATE failed: %s" % err)
-    #except Exception as err:
-    #    logger.warning("Export to tagged file failed: %s" % (err))
 
 
 def write_xml(inputRecord):
@@ -218,7 +286,7 @@ def write_xml(inputRecord):
             raise Exception("This is not a crossref file.")
     except Exception as err:
         logger.warning("Export of doi (%s) to xml failed: %s" % (doi, err))
-    
+
 
 def create_refs(rec=None, args=None, bibcode=None):
     try:
@@ -298,6 +366,8 @@ def process_record(rec, args):
         else:
             if args.id_page:
                parsedRecord = move_pubid(parsedRecord)
+            elif args.doi_page:
+               parsedRecord = move_doiid(parsedRecord)
             try:
                 write_record(parsedRecord, args)
             except Exception as err:
@@ -383,7 +453,7 @@ def main():
         # This route processes data from user-input files
         if args.proc_path:
             process_filepath(args)
-            
+
         # This route fetches data from Crossref via the Habanero module
         elif (args.fetch_doi or args.fetch_doi_list):
             doiList = None

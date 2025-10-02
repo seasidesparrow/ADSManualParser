@@ -19,11 +19,12 @@ class Translator(object):
     '''
 
     # INITIALIZATION
-    def __init__(self, data=None, doibib={}, idpage=False, **kwargs):
+    def __init__(self, data=None, doibib={}, idpage=False, doipage=False, **kwargs):
         self.data = data
         self.output = dict()
         self.doibib = doibib
         self.idpage = idpage
+        self.doipage = doipage
         return
 
     # DETAGGER (from jats.py)
@@ -90,6 +91,8 @@ class Translator(object):
         surname = name.get('surname', None)
         given_name = name.get('given_name', None)
         middle_name = name.get('middle_name', None)
+        prefix = name.get('prefix', None)
+        suffix = name.get('suffix', None)
         pubraw = name.get('pubraw', None)
         collab = name.get('collab', None)
         native = name.get('native_lang', None)
@@ -97,9 +100,13 @@ class Translator(object):
         if surname:
             outname = surname
             if given_name:
+                if prefix:
+                    given_name = prefix + ' ' + given_name
                 outname = outname + ', ' + given_name
                 if middle_name:
                     outname = outname + ' ' + middle_name
+            if suffix:
+                outname = outname + ', ' + suffix
         elif given_name:
             outname = given_name
         elif collab:
@@ -298,15 +305,18 @@ class Translator(object):
                 elif source == 'pub_html' and location:
                     props['HTML'] = location
 
-        # special case: inderscience
+        # special case: inderscience, or others where doi is in publisherIDs
         pubids = self.data.get('publisherIDs', [])
         for i in pubids:
-            if i.get("attribute", None).upper() == "URL":
+            if i.get("attribute", "").upper() == "URL":
                 url = i.get("Identifier", "")
                 props['HTML'] = url
                 if "https://www.inderscienceonline.com" in url:
                     doi = url.replace("https://www.inderscienceonline.com/doi/","")
                     props['DOI'] = doi
+            elif i.get("attribute", "").upper() == "DOI":
+                doi = i.get("Identifier")
+                props['DOI'] = doi
                     
                 
         if persistentids:
@@ -412,13 +422,15 @@ class Translator(object):
                 # Wiley special case
                 if (firstp in idno) and check_alphanumeric.findall(firstp):
                     firstp = ""
+                elif firstp and idno and check_alphanumeric.findall(firstp):
+                    firstp = ""
                 if firstp == "NP" and lastp == "NP":
                     pagination = ""
                     self.data["pagination"] = pagination
                 else:
                     if (firstp and lastp) and not pagerange:
                         pagerange = firstp + '-' + lastp
-                    if self.idpage and idno:
+                    if (self.idpage or self.doipage) and idno:
                         if pubstring:
                             pubstring = pubstring + ', id.' + idno
                         else:
@@ -432,6 +444,7 @@ class Translator(object):
                         if pubstring:
                             pubstring = pubstring + ', page ' + firstp
                     elif idno:
+                        self.data["pagination"] = {"electronicID": idno}
                         if pubstring:
                             pubstring = pubstring + ', id.' + idno
                         else:
