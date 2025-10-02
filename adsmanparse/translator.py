@@ -305,15 +305,18 @@ class Translator(object):
                 elif source == 'pub_html' and location:
                     props['HTML'] = location
 
-        # special case: inderscience
+        # special case: inderscience, or others where doi is in publisherIDs
         pubids = self.data.get('publisherIDs', [])
         for i in pubids:
-            if i.get("attribute", None).upper() == "URL":
+            if i.get("attribute", "").upper() == "URL":
                 url = i.get("Identifier", "")
                 props['HTML'] = url
                 if "https://www.inderscienceonline.com" in url:
                     doi = url.replace("https://www.inderscienceonline.com/doi/","")
                     props['DOI'] = doi
+            elif i.get("attribute", "").upper() == "DOI":
+                doi = i.get("Identifier")
+                props['DOI'] = doi
                     
                 
         if persistentids:
