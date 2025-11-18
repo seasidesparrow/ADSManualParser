@@ -295,6 +295,7 @@ class Translator(object):
     def _get_properties(self, parsedfile):
         props = {}
         persistentids = self.data.get('persistentIDs', None)
+        dcotype = self.data.get('doctype', None)
         esources = self.data.get('esources', None)
         if esources:
             for src in esources:
@@ -340,7 +341,10 @@ class Translator(object):
             parsedFileName = self.data.get('recordData', {}).get('loadLocation', None)
             if parsedFileName:
                 props['FILE'] = parsedFileName
-            
+
+        if doctype:
+            props['DOCTYPE'] = doctype
+
         if props:
             self.output['properties'] = props
         pass
