@@ -295,7 +295,7 @@ class Translator(object):
     def _get_properties(self, parsedfile):
         props = {}
         persistentids = self.data.get('persistentIDs', None)
-        dcotype = self.data.get('doctype', None)
+        doctype = self.data.get('doctype', None)
         esources = self.data.get('esources', None)
         if esources:
             for src in esources:
