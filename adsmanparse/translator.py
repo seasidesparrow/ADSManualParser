@@ -362,11 +362,15 @@ class Translator(object):
         editorstring=None
         for oc in otherContrib:
             if oc.get("role", None) == "editor":
-                given = oc.get("contrib", {}).get("name", {}).get("given_name", None)
-                surname = oc.get("contrib", {}).get("name", {}).get("surname", None)
-                if given:
+                given = oc.get("contrib", {}).get("name", {}).get("given_name", "")
+                surname = oc.get("contrib", {}).get("name", {}).get("surname", "")
+                if given and surname:
                     given = given[0]
-                editors.append(given + ". " + surname)
+                    editors.append(given + ". " + surname)
+                elif surname:
+                    editors.append(surname)
+                elif given:
+                    editors.append(given)
         if len(editors) == 1:
             editorstring = editors[0] + ", editor."
         elif len(editors) > 1 and len(editors) <= 3:
