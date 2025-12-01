@@ -98,7 +98,7 @@ def get_args():
                         dest='file_type',
                         action='store',
                         default=None,
-                        help='Type of input file: jats, dc, cr, nlm, elsevier, feedback, copernicus, wiley')
+                        help='Type of input file: jats, dc, cr, nlm, elsevier, feedback, copernicus, wiley, dubcore, ieee')
 
     parser.add_argument('-w',
                         '--write_refs',
