@@ -11,7 +11,7 @@ from adsingestp.parsers.elsevier import ElsevierParser
 from adsingestp.parsers.adsfeedback import ADSFeedbackParser
 from adsingestp.parsers.copernicus import CopernicusParser
 from adsingestp.parsers.wiley import WileyParser
-from adsmanparse import translator, doiharvest, classic_serializer, utils, counter
+from adsmanparse import translator, doiharvest, classic_serializer, utils, counter, handlers
 from adsputils import load_config, setup_logging
 from datetime import datetime, timedelta
 from glob import iglob
@@ -162,6 +162,13 @@ def get_args():
                         action='store_true',
                         default=False,
                         help='Use a running counter in place of page')
+
+    parser.add_argument('-O',
+                        '--oai-pmh-crossref',
+                        dest='oaipmh_xref',
+                        action='store_true',
+                        default=False,
+                        help='Use handlers.RecentOAIPMH to parse recent Crossref harvests')
 
 
     args = parser.parse_args()
@@ -380,40 +387,46 @@ def process_record(rec, args):
 
 
 def process_filepath(args):
+    infiles = []
     if args.proc_path:
         logger.info("Finding files in path %s ..." % args.proc_path)
         infiles = [x for x in iglob(args.proc_path, recursive=True)]
-        if not infiles:
-            logger.warning("No files found in path %s." % args.proc_path)
-        else:
-            logger.info("Found %s files." % len(infiles))
-            if args.proc_since:
-                logger.info("Checking file ages...")
-                dtime = timedelta(days=int(args.proc_since))
-                today = datetime.today()
-                infiles_since = [x for x in infiles if ((today - datetime.fromtimestamp(os.path.getmtime(x))) <= dtime)]
-                infiles = infiles_since
-            if not infiles:
+        if args.proc_since:
+            logger.info("Checking file ages...")
+            dtime = timedelta(days=int(args.proc_since))
+            today = datetime.today()
+            infiles_since = [x for x in infiles if ((today - datetime.fromtimestamp(os.path.getmtime(x))) <= dtime)]
+            if not infiles_since:
                 logger.error("No files more recent than %s days old!" % str(args.proc_since))
             else:
-                nfiles = len(infiles)
-                logger.info("There were %s files found to process" % str(nfiles))
-                for f in infiles:
-                    inputRecord = {}
-                    try:
-                        with open(f, 'r') as fin:
-                            inputRecord = {'data': fin.read(),
-                                           'name': f,
-                                           'type': args.file_type}
-                    except Exception as err:
-                        logger.warning("Failed to read input file %s: %s" % (f, err))
-                    else:
-                        try:
-                            process_record(inputRecord, args)
-                        except Exception as err:
-                            logger.warning("Process record failed: %s" % err)
+                infiles = infiles_since
+    elif args.oaipmh_xref:
+        logger.info("Getting the most-recent %s days of Crossref harvests" % args.proc_since)
+        handler = handlers.RecentOAIPMH(maxage=self.proc_since, basedir=conf.get("XREF_HARVEST_DIR", "/proj/ads_abstracts/sources/CrossRef/")
+        infiles = handler.getxmlfiles()
     else:
         logger.warning("Null processing path given, nothing processed.")
+
+    if not infiles:
+        logger.warning("No files found in path %s." % args.proc_path)
+    else:
+        logger.info("Found %s files." % len(infiles))
+        nfiles = len(infiles)
+            logger.info("There were %s files found to process" % str(nfiles))
+            for f in infiles:
+                inputRecord = {}
+                try:
+                    with open(f, 'r') as fin:
+                        inputRecord = {'data': fin.read(),
+                                       'name': f,
+                                       'type': args.file_type}
+                except Exception as err:
+                    logger.warning("Failed to read input file %s: %s" % (f, err))
+                else:
+                    try:
+                        process_record(inputRecord, args)
+                    except Exception as err:
+                        logger.warning("Process record failed: %s" % err)
 
 
 def process_doilist(doilist, args):
@@ -450,8 +463,18 @@ def main():
         fileTypeList = PARSER_TYPES.keys()
         logger.error("You need to provide a filetype from this list: %s" % str(fileTypeList))
     else:
+
+        # If processing the Crossref OAI_PMH harvest, hardwire some options
+        # for ease of use:
+        if args.oaipmh_xref:
+            args.file_type = "cr"
+            args.write_refs = True
+            args.source = "cr"
+            if not args.proc_since:
+                args.proc_since = 7
+
         # This route processes data from user-input files
-        if args.proc_path:
+        if args.proc_path or args.oaipmh_xref:
             process_filepath(args)
 
         # This route fetches data from Crossref via the Habanero module
