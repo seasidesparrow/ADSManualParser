@@ -402,7 +402,7 @@ def process_filepath(args):
                 infiles = infiles_since
     elif args.oaipmh_xref:
         logger.info("Getting the most-recent %s days of Crossref harvests" % args.proc_since)
-        handler = handlers.RecentOAIPMH(maxage=self.proc_since, basedir=conf.get("XREF_HARVEST_DIR", "/proj/ads_abstracts/sources/CrossRef/")
+        handler = handlers.RecentOAIPMH(maxage=args.proc_since, basedir=conf.get("XREF_HARVEST_DIR", "/proj/ads_abstracts/sources/CrossRef/"))
         infiles = handler.getxmlfiles()
     else:
         logger.warning("Null processing path given, nothing processed.")
@@ -412,21 +412,21 @@ def process_filepath(args):
     else:
         logger.info("Found %s files." % len(infiles))
         nfiles = len(infiles)
-            logger.info("There were %s files found to process" % str(nfiles))
-            for f in infiles:
-                inputRecord = {}
+        logger.info("There were %s files found to process" % str(nfiles))
+        for f in infiles:
+            inputRecord = {}
+            try:
+                with open(f, 'r') as fin:
+                    inputRecord = {'data': fin.read(),
+                                   'name': f,
+                                   'type': args.file_type}
+            except Exception as err:
+                logger.warning("Failed to read input file %s: %s" % (f, err))
+            else:
                 try:
-                    with open(f, 'r') as fin:
-                        inputRecord = {'data': fin.read(),
-                                       'name': f,
-                                       'type': args.file_type}
+                    process_record(inputRecord, args)
                 except Exception as err:
-                    logger.warning("Failed to read input file %s: %s" % (f, err))
-                else:
-                    try:
-                        process_record(inputRecord, args)
-                    except Exception as err:
-                        logger.warning("Process record failed: %s" % err)
+                    logger.warning("Process record failed: %s" % err)
 
 
 def process_doilist(doilist, args):

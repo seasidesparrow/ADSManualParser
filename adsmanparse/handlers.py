@@ -36,6 +36,8 @@ class RecentOAIPMH(object):
         if not basedir:
             raise NoBaseDirectoryException("You need to specify a base directory for your OAI-PMH Harvest")
         else:
+            if type(maxage) == str:
+                maxage = int(maxage)
             self.maxage = maxage
             self.basedir = basedir
             self.logdir = logdir
