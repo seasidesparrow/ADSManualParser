@@ -2,7 +2,7 @@ import itertools
 import re
 import string
 from collections import OrderedDict
-from namedentities import named_entities
+from adsmanparse.utils import u2html5
 
 re_empty_affil = re.compile(r"\w{2,3}\(\)")
 
@@ -25,7 +25,7 @@ class ClassicSerializer(object):
         return two_char + three_char
 
     def _clean_string(self, data):
-        data = named_entities(data)
+        data = u2html5(data)
         data = re.sub(r"&[rl]squo;", "\'", data)
         data = re.sub(r"&[rl]dquo;", "\"", data)
         data = re.sub(r"&nbsp;", " ", data)
