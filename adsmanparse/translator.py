@@ -383,6 +383,7 @@ class Translator(object):
         if not self.output.get("publication", ""):
             publication = self.data.get("publication", {})
             pagination = self.data.get("pagination", {})
+            publisher = ""
             pubstring = ""
             if publication:
                 journal = publication.get("pubName", "")

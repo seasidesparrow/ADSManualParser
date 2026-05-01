@@ -36,7 +36,7 @@ logger = setup_logging(
     attach_stdout=conf.get("LOG_STDOUT", False),
 )
 
-#doi_bibcode_dict = utils.load_doi_bibcode(conf.get("DOI_BIBCODE_MAP", "./all.links"))
+doi_bibcode_dict = utils.load_doi_bibcode(conf.get("DOI_BIBCODE_MAP", "./all.links"))
 
 counter_datafile = conf.get("COUNTER_DATAFILE", "./counter.json")
 
@@ -472,6 +472,12 @@ def main():
             args.source = "cr"
             if not args.proc_since:
                 args.proc_since = 7
+            else:
+                try:
+                    args.proc_since = int(args.proc_since)
+                except:
+                    logger.error("Your value for the age is not an integer")
+                    args.proc_since = 0
 
         # This route processes data from user-input files
         if args.proc_path or args.oaipmh_xref:

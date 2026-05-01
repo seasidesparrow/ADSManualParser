@@ -87,3 +87,27 @@ class RecentOAIPMH(object):
             return xmlfiles
         except Exception as err:
             raise GetInputFilesException("Unable to get a list of input xml files: %s" % err)
+
+def main():
+
+    HARVEST_BASE = "/proj/ads_abstracts/sources/CrossRef/"
+    maxAge = 7
+    ff = RecentOAIPMH(maxage=maxAge, basedir=HARVEST_BASE)
+    xmlfiles = ff.getxmlfiles()
+
+    with open("mtxr.tag", "w") as fw:
+        for f in xmlfiles:
+            with open(f, "rb") as fx:
+                raw = fx.read()
+                try:
+                    parser = CrossrefParser()
+                    xlator = Translator()
+                    xlator.translate(parser.parse(raw))
+                    seri = ClassicSerializer()
+                    fw.write("%s\n" % seri.output(xlator.output))
+                except Exception as err:
+                    print("Error parsing %s: %s" % (f, err))
+
+
+if __name__ == '__main__':
+    main()
