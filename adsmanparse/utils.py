@@ -1,3 +1,4 @@
+import html
 import re
 from bs4 import BeautifulSoup
 
@@ -39,3 +40,11 @@ def load_doi_bibcode(infile):
         print("Failed to load doi-bibcode mapping: %s" % err)
     return doi_bibc
 
+def u2html5(unicode_string):
+    try:
+        char_to_entity = {char: f"&{name}" for name, char in html.entities.html5.items() if (len(char) == 1 and ord(char) > 255)}
+        translation_table = {ord(char): entity for char, entity in char_to_entity.items()}
+    
+        return unicode_string.translate(translation_table)
+    except Exception:
+        pass

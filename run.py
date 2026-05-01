@@ -36,7 +36,7 @@ logger = setup_logging(
     attach_stdout=conf.get("LOG_STDOUT", False),
 )
 
-doi_bibcode_dict = utils.load_doi_bibcode(conf.get("DOI_BIBCODE_MAP", "./all.links"))
+#doi_bibcode_dict = utils.load_doi_bibcode(conf.get("DOI_BIBCODE_MAP", "./all.links"))
 
 counter_datafile = conf.get("COUNTER_DATAFILE", "./counter.json")
 
