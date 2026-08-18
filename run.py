@@ -379,6 +379,8 @@ def process_record(rec, args):
         if not parsedRecord:
             logger.error("Parsing yielded no data for %s" % rec.get("name", None))
         else:
+            with open("damn.json", "w") as f:
+                f.write("%s\n" % json.dumps(parsedRecord, indent=2, sort_keys=True))
             if args.id_page:
                parsedRecord = move_pubid(parsedRecord)
             elif args.doi_page:

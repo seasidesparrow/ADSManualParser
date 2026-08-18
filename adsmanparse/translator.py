@@ -52,14 +52,14 @@ class Translator(object):
 
         newr = str(newr)
 
-        amp_fix = fix_ampersand.findall(newr)
-        for s in amp_fix:
-            s_old = ''.join(s)
-            s_new = '&' + s[1] + ';'
-            newr = newr.replace(s_old, s_new)
+        #amp_fix = fix_ampersand.findall(newr)
+        #for s in amp_fix:
+        #    s_old = ''.join(s)
+        #    s_new = '&' + s[1] + ';'
+        #    newr = newr.replace(s_old, s_new)
 
-        newr = newr.replace(u'\n', u' ').replace(u'  ', u' ')
-        newr = newr.replace('&nbsp;', ' ')
+        #newr = newr.replace(u'\n', u' ').replace(u'  ', u' ')
+        #newr = newr.replace('&nbsp;', ' ')
 
         return newr
 

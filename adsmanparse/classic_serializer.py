@@ -2,7 +2,7 @@ import itertools
 import re
 import string
 from collections import OrderedDict
-from adsmanparse.utils import u2html5
+from adsmanparse.convert_entities import ConvertEntities
 
 re_empty_affil = re.compile(r"\w{2,3}\(\)")
 
@@ -24,13 +24,13 @@ class ClassicSerializer(object):
             itertools.product(two_char, letters)]
         return two_char + three_char
 
-    def _clean_string(self, data):
-        data = u2html5(data)
-        data = re.sub(r"&[rl]squo;", "\'", data)
-        data = re.sub(r"&[rl]dquo;", "\"", data)
-        data = re.sub(r"&nbsp;", " ", data)
-        data = re.sub(r"&zwnj;", " ", data)
-        return data
+    #def _clean_string(self, data):
+        #data = u2html5(data)
+        #data = re.sub(r"&[rl]squo;", "\'", data)
+        #data = re.sub(r"&[rl]dquo;", "\"", data)
+        #data = re.sub(r"&nbsp;", " ", data)
+        #data = re.sub(r"&zwnj;", " ", data)
+        #return data
 
     def __init__(self, **kwargs):
         self.AFF_LABEL = self._aff_codes_generator()
@@ -68,6 +68,7 @@ class ClassicSerializer(object):
 
     def output(self, record):
         output_text = []
+        clean_string = ConvertEntities()
         if self.TAG_REFS:
             if record.get("refhandler_list", None):
                 record["references"] = record["refhandler_list"]
@@ -84,7 +85,8 @@ class ClassicSerializer(object):
                elif isinstance(rec_field, dict):
                    rec_field = join_str.join(
                        ["%s: %s" % (fk, fv) for fk, fv in rec_field.items()])
-               line_out = "%s%s %s\n" % ("%", tag, self._clean_string(rec_field))
+               #line_out = "%s%s %s\n" % ("%", tag, self._clean_string(rec_field))
+               line_out = "%s%s %s\n" % ("%", tag, clean_string.convert(rec_field))
                output_text.append(line_out)
         output = "".join(output_text)
         return output
