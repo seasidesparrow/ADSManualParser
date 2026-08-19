@@ -9,3 +9,4 @@ secrets/
 cleanup/
 venv/
 .venv/
+.tmp/
