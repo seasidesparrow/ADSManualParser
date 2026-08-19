@@ -1,10 +1,13 @@
+import html
 import itertools
 import re
 import string
 from collections import OrderedDict
-from adsmanparse.utils import u2html5
+import adsmanparse.utils
 
 re_empty_affil = re.compile(r"\w{2,3}\(\)")
+
+u2asc = adsmanparse.utils.ConvertEntities()
 
 class ClassicSerializer(object):
     """
@@ -25,12 +28,12 @@ class ClassicSerializer(object):
         return two_char + three_char
 
     def _clean_string(self, data):
-        data = u2html5(data)
-        data = re.sub(r"&[rl]squo;", "\'", data)
-        data = re.sub(r"&[rl]dquo;", "\"", data)
-        data = re.sub(r"&nbsp;", " ", data)
-        data = re.sub(r"&zwnj;", " ", data)
-        return data
+        try:
+            newdata = u2asc.convert(data)
+        except Exception as err:
+            return data
+        else:
+            return newdata
 
     def __init__(self, **kwargs):
         self.AFF_LABEL = self._aff_codes_generator()
