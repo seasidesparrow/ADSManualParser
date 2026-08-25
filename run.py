@@ -170,6 +170,13 @@ def get_args():
                         default=False,
                         help='Use handlers.RecentOAIPMH to parse recent Crossref harvests')
 
+    parser.add_argument('-L',
+                        '--file_list',
+                        dest='file_list',
+                        action='store',
+                        default=None,
+                        help='Filename of input list of files')
+
 
     args = parser.parse_args()
     return args
@@ -450,6 +457,16 @@ def process_doilist(doilist, args):
     else:
         logger.warning("No DOIs provided, nothing processed.")
 
+def process_input_file_list(args):
+    try:
+        with open(args.file_list, "r") as fi:
+            for l in fi.readlines():
+                procfile =l.strip()
+                if os.path.exists(procfile):
+                    args.proc_path = procfile
+                    process_filepath(args)
+    except Exception as err:
+        logger.warning("Failed to parse list of files: %s" % err)
 
 def main():
     args = get_args()
@@ -482,6 +499,10 @@ def main():
         # This route processes data from user-input files
         if args.proc_path or args.oaipmh_xref:
             process_filepath(args)
+
+        # This route processes a file with full paths to files
+        elif args.file_list:
+            process_input_file_list(args)
 
         # This route fetches data from Crossref via the Habanero module
         elif (args.fetch_doi or args.fetch_doi_list):
