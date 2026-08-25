@@ -2,6 +2,11 @@ import os
 from datetime import date, timedelta
 from glob import glob
 
+from adsingestp.parsers.crossref import CrossrefParser
+
+from adsmanparse.classic_serializer import ClassicSerializer
+from adsmanparse.translator import Translator
+
 
 class NoBaseDirectoryException(Exception):
     pass
@@ -20,7 +25,6 @@ class GetInputFilesException(Exception):
 
 
 class RecentOAIPMH(object):
-
     # Purpose:
     #   Use configuration/user input to create a list of .xml files harvested
     #   by an instance of our OAI-PMH harvester in the past [maxage] days.
@@ -34,7 +38,9 @@ class RecentOAIPMH(object):
 
     def __init__(self, maxage=7, basedir=None, logdir="UpdateAgent", dates=[]):
         if not basedir:
-            raise NoBaseDirectoryException("You need to specify a base directory for your OAI-PMH Harvest")
+            raise NoBaseDirectoryException(
+                "You need to specify a base directory for your OAI-PMH Harvest"
+            )
         else:
             if type(maxage) == str:
                 maxage = int(maxage)
@@ -43,7 +49,6 @@ class RecentOAIPMH(object):
             self.logdir = logdir
             self.dates = dates
             self.logfiles = []
-
 
     def _datestrings(self):
         if not self.dates:
@@ -60,7 +65,7 @@ class RecentOAIPMH(object):
                     self.dates = dates
             except Exception as err:
                 raise GetDatesException("Unable to get list of dates to check: %s" % err)
-    
+
     def _getlogfiles(self):
         logfiles = []
         logDir = os.path.join(self.basedir, self.logdir)
@@ -82,14 +87,14 @@ class RecentOAIPMH(object):
             self._getlogfiles()
             for f in self.logfiles:
                 with open(f, "r") as fl:
-                    for l in fl.readlines():
-                        xmlfiles.append("%s%s" % (self.basedir, l.strip().split("\t")[0]))
+                    for line in fl.readlines():
+                        xmlfiles.append("%s%s" % (self.basedir, line.strip().split("\t")[0]))
             return xmlfiles
         except Exception as err:
             raise GetInputFilesException("Unable to get a list of input xml files: %s" % err)
 
-def main():
 
+def main():
     HARVEST_BASE = "/proj/ads_abstracts/sources/CrossRef/"
     maxAge = 7
     ff = RecentOAIPMH(maxage=maxAge, basedir=HARVEST_BASE)
@@ -109,5 +114,5 @@ def main():
                     print("Error parsing %s: %s" % (f, err))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

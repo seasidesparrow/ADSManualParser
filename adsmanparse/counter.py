@@ -6,6 +6,7 @@ counters to set the page, absent a page or electronic id.
 import json
 import os
 
+
 class JSONLoadException(Exception):
     pass
 
@@ -23,7 +24,6 @@ class CounterSyntaxException(Exception):
 
 
 class Counter(object):
-
     def __init__(self):
         pass
 
@@ -56,18 +56,17 @@ class Counter(object):
                         newpage = page + 1
                         bibdata[bibstem]["ALL"] = newpage
                     else:
-                        try:
-                            page = bibdata[bibstem].pop(year)
-                        except:
-                            page = 0
+                        page = bibdata[bibstem].get(year, 0)
                         newpage = page + 1
                         bibdata[bibstem][year] = newpage
                 else:
                     newpage = 1
-                    bibdata[bibstem]={year: newpage}
+                    bibdata[bibstem] = {year: newpage}
                 self._write_to_json(infile, bibdata)
                 return newpage
             except Exception as err:
                 raise GetPageException("Counter increment failed: %s" % err)
         else:
-            raise CounterSyntaxException("Call get_page with bibstem, year, and path to counter.json!")
+            raise CounterSyntaxException(
+                "Call get_page with bibstem, year, and path to counter.json!"
+            )

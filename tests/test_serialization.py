@@ -2,10 +2,9 @@ import json
 import os
 import unittest
 
-import pytest
-
 from adsmanparse.classic_serializer import ClassicSerializer
 from adsmanparse.translator import Translator
+
 
 class TestClassicSerialization(unittest.TestCase):
     def setUp(self):
@@ -33,8 +32,7 @@ class TestClassicSerialization(unittest.TestCase):
 
             xr = Translator()
             xr.translate(data=parsed_rec, bibstem=bibstem)
-            xr.output['bibcode'] = '2021AJ....162...20N'
+            xr.output["bibcode"] = "2021AJ....162...20N"
             cs = ClassicSerializer()
             test_output = cs.output(xr.output)
             self.assertEqual(test_output, classic_rec)
-

@@ -1,13 +1,14 @@
-import html
 import itertools
 import re
 import string
 from collections import OrderedDict
+
 import adsmanparse.utils
 
 re_empty_affil = re.compile(r"\w{2,3}\(\)")
 
 u2asc = adsmanparse.utils.ConvertEntities()
+
 
 class ClassicSerializer(object):
     """
@@ -18,19 +19,17 @@ class ClassicSerializer(object):
     single string (including carriage returns) that can be written to a file.
     """
 
-
     def _aff_codes_generator(self):
         letters = [c for c in string.ascii_uppercase]
-        two_char = ["%c%c" % (x, y) for (x, y) in \
-            itertools.product(letters, letters)]
-        three_char = ["%s%c" % (x, y) for (x, y) in \
-            itertools.product(two_char, letters)]
+        two_char = ["%c%c" % (x, y) for (x, y) in itertools.product(letters, letters)]
+        three_char = ["%s%c" % (x, y) for (x, y) in itertools.product(two_char, letters)]
         return two_char + three_char
 
     def _clean_string(self, data):
         try:
             newdata = u2asc.convert(data)
         except Exception as err:
+            print("Couldn't clean string: %s" % err)
             return data
         else:
             return newdata
@@ -38,26 +37,29 @@ class ClassicSerializer(object):
     def __init__(self, **kwargs):
         self.AFF_LABEL = self._aff_codes_generator()
         self.TAG_REFS = kwargs.get("tag_refs", False)
-        self.FIELD_DICT = OrderedDict([
-            ('bibcode', {'tag': 'R'}),
-            ('title', {'tag': 'T'}),
-            ('authors', {'tag': 'A', 'join': '; '}),
-            ('native_authors', {'tag': 'n', 'join': ', '}),
-            ('affiliations', {'tag': 'F', 'join': ', '}),
-            ('pubdate', {'tag': 'D'}),
-            ('publication', {'tag': 'J'}),
-            ('language', {'tag': 'M'}),
-            ('comments', {'tag': 'X', 'join': '; '}),
-            ('source', {'tag': 'G'}),
-            ('copyright', {'tag': 'C'}),
-            ('uatkeys', {'tag': 'U', 'join': ', '}),
-            ('keywords', {'tag': 'K', 'join': ', '}),
-            ('subjectcategory', {'tag': 'Q', 'join': '; '}),
-            ('database', {'tag': 'W', 'join': '; '}),
-            ('page', {'tag': 'P'}),
-            ('abstract', {'tag': 'B'}),
-            ('properties', {'tag': 'I', 'join': '; '}),
-            ('references', {'tag': 'Z', 'join': "\n"}),])
+        self.FIELD_DICT = OrderedDict(
+            [
+                ("bibcode", {"tag": "R"}),
+                ("title", {"tag": "T"}),
+                ("authors", {"tag": "A", "join": "; "}),
+                ("native_authors", {"tag": "n", "join": ", "}),
+                ("affiliations", {"tag": "F", "join": ", "}),
+                ("pubdate", {"tag": "D"}),
+                ("publication", {"tag": "J"}),
+                ("language", {"tag": "M"}),
+                ("comments", {"tag": "X", "join": "; "}),
+                ("source", {"tag": "G"}),
+                ("copyright", {"tag": "C"}),
+                ("uatkeys", {"tag": "U", "join": ", "}),
+                ("keywords", {"tag": "K", "join": ", "}),
+                ("subjectcategory", {"tag": "Q", "join": "; "}),
+                ("database", {"tag": "W", "join": "; "}),
+                ("page", {"tag": "P"}),
+                ("abstract", {"tag": "B"}),
+                ("properties", {"tag": "I", "join": "; "}),
+                ("references", {"tag": "Z", "join": "\n"}),
+            ]
+        )
         pass
 
     def _format_affil_field(self, affils):
@@ -80,14 +82,15 @@ class ClassicSerializer(object):
             if k == "affiliations" or k == "native_authors":
                 rec_field = self._format_affil_field(rec_field)
             if rec_field:
-               tag = v.get("tag", None)
-               join_str = v.get("join", "")
-               if isinstance(rec_field, list):
-                   rec_field = join_str.join(item for item in rec_field if item)
-               elif isinstance(rec_field, dict):
-                   rec_field = join_str.join(
-                       ["%s: %s" % (fk, fv) for fk, fv in rec_field.items()])
-               line_out = "%s%s %s\n" % ("%", tag, self._clean_string(rec_field))
-               output_text.append(line_out)
+                tag = v.get("tag", None)
+                join_str = v.get("join", "")
+                if isinstance(rec_field, list):
+                    rec_field = join_str.join(item for item in rec_field if item)
+                elif isinstance(rec_field, dict):
+                    rec_field = join_str.join(
+                        ["%s: %s" % (fk, fv) for fk, fv in rec_field.items()]
+                    )
+                line_out = "%s%s %s\n" % ("%", tag, self._clean_string(rec_field))
+                output_text.append(line_out)
         output = "".join(output_text)
         return output
