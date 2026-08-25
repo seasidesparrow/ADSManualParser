@@ -8,22 +8,26 @@ This uses the new infrastructure developed for ADSManualParser, including
 
 import argparse
 import os
+
 from adsingestp.parsers.datacite import DataciteParser
-from adsmanparse import translator, classic_serializer
 from adsputils import setup_logging
 
-logger = setup_logging('zenodo-parser')
+from adsmanparse import classic_serializer, translator
+
+logger = setup_logging("zenodo-parser")
+
 
 def get_args():
-
     parser = argparse.ArgumentParser("Parse a Zenodo record")
 
-    parser.add_argument("-f",
-                        "--infile",
-                        dest="infile",
-                        action="store",
-                        default=None,
-                        help="Full path to input file")
+    parser.add_argument(
+        "-f",
+        "--infile",
+        dest="infile",
+        action="store",
+        default=None,
+        help="Full path to input file",
+    )
 
     args = parser.parse_args()
     return args
@@ -47,9 +51,8 @@ def parse(infile):
         logger.warning("Parsing failed for file %s: %s" % (infile, err))
 
 
-
 def main():
-    args=get_args()
+    args = get_args()
 
     if args.infile:
         if os.path.exists(args.infile):

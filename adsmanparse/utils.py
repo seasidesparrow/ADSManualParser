@@ -1,20 +1,23 @@
 import html
 import re
-from adsmanparse.custom_entity_conversions import ASCII_CUST_MAP
+
 from bs4 import BeautifulSoup
+
+from adsmanparse.custom_entity_conversions import ASCII_CUST_MAP
 
 ENTITY_RE = re.compile(r"&([a-zA-Z#][a-zA-Z0-9]+);")
 
+
 def has_body(data):
     try:
-        soup = BeautifulSoup(data, 'lxml-xml')
+        soup = BeautifulSoup(data, "lxml-xml")
     except Exception as err:
-        print("soupify failed:",err)
+        print("soupify failed:", err)
     else:
         try:
-            body = soup.find('body')
+            body = soup.find("body")
         except Exception as err:
-            print('find failed:', err)
+            print("find failed:", err)
         else:
             if body:
                 return True
@@ -22,11 +25,12 @@ def has_body(data):
 
 
 def suppress_title(record, suppressed_titles):
-    title = record.get('title', {}).get('textEnglish', None)
+    title = record.get("title", {}).get("textEnglish", None)
     if title:
         for dtitle in suppressed_titles:
             if re.search(dtitle, title, flags=re.IGNORECASE):
                 return True
+
 
 def load_doi_bibcode(infile):
     doi_bibc = {}
@@ -43,8 +47,8 @@ def load_doi_bibcode(infile):
         print("Failed to load doi-bibcode mapping: %s" % err)
     return doi_bibc
 
-class ConvertEntities(object):
 
+class ConvertEntities(object):
     def __init__(self):
         pass
 
@@ -76,7 +80,7 @@ class ConvertEntities(object):
             for ch in text:
                 cp = ord(ch)
                 out.append(ch if cp < 128 else f"&#{cp};")
-            return ''.join(out)
+            return "".join(out)
 
     def _convert_entities_to_ascii(self, text: str) -> str:
         def replacer(match):
@@ -121,55 +125,69 @@ class ConvertEntities(object):
 
             # Preserve ASCII
             if cp < 128:
-                if ch == '&':
-                    out.append('&')
-                    #out.append('&amp;')
-                elif ch == '<':
-                    out.append('<')
-                    #out.append('&lt;')
-                elif ch == '>':
-                    out.append('>')
-                    #out.append('&gt;')
+                if ch == "&":
+                    out.append("&")
+                    # out.append('&amp;')
+                elif ch == "<":
+                    out.append("<")
+                    # out.append('&lt;')
+                elif ch == ">":
+                    out.append(">")
+                    # out.append('&gt;')
                 else:
                     out.append(ch)
                 continue
 
             # Cyrillic -> decimal NCR
             if (
-                0x0400 <= cp <= 0x04FF or
-                0x0500 <= cp <= 0x052F or
-                0x2DE0 <= cp <= 0x2DFF or
-                0xA640 <= cp <= 0xA69F
+                0x0400 <= cp <= 0x04FF
+                or 0x0500 <= cp <= 0x052F
+                or 0x2DE0 <= cp <= 0x2DFF
+                or 0xA640 <= cp <= 0xA69F
             ):
                 out.append(f"&#{cp};")
                 continue
 
             # Math, logic, arrows, technical symbols -> decimal NCR
             if (
-                0x2190 <= cp <= 0x21FF or
-                0x2200 <= cp <= 0x22FF or
-                0x27C0 <= cp <= 0x27EF or
-                0x2980 <= cp <= 0x29FF or
-                0x2A00 <= cp <= 0x2AFF or
-                0x2300 <= cp <= 0x23FF
+                0x2190 <= cp <= 0x21FF
+                or 0x2200 <= cp <= 0x22FF
+                or 0x27C0 <= cp <= 0x27EF
+                or 0x2980 <= cp <= 0x29FF
+                or 0x2A00 <= cp <= 0x2AFF
+                or 0x2300 <= cp <= 0x23FF
             ):
                 out.append(f"&#{cp};")
                 continue
 
             # Latin Extended (Turkish, etc.)
-            if (
-                0x0100 <= cp <= 0x017F or
-                0x0180 <= cp <= 0x024F
-            ):
+            if 0x0100 <= cp <= 0x017F or 0x0180 <= cp <= 0x024F:
                 if cp in html.entities.codepoint2name:
                     name = html.entities.codepoint2name[cp]
 
                     # Preserve traditional HTML4 accented Latin entities
-                    if name.startswith((
-                        'A', 'a', 'E', 'e', 'I', 'i',
-                        'O', 'o', 'U', 'u', 'Y', 'y',
-                        'C', 'c', 'N', 'n', 'S', 's'
-                    )):
+                    if name.startswith(
+                        (
+                            "A",
+                            "a",
+                            "E",
+                            "e",
+                            "I",
+                            "i",
+                            "O",
+                            "o",
+                            "U",
+                            "u",
+                            "Y",
+                            "y",
+                            "C",
+                            "c",
+                            "N",
+                            "n",
+                            "S",
+                            "s",
+                        )
+                    ):
                         out.append(f"&{name};")
                     else:
                         out.append(f"&#{cp};")
@@ -191,4 +209,4 @@ class ConvertEntities(object):
             else:
                 out.append(f"&#{cp};")
 
-        return ''.join(out)
+        return "".join(out)
