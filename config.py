@@ -50,6 +50,7 @@ DEPRECATED_TITLES=[
     r'^Contents:\sGraphical\sAbstracts',
     r'^Full\sIssue',
     r'^Fronti[es]piece',
+    r'^Advertising\sand\sFront\sMatter',
     r'^Other\sContents',
     r'^Graphical\sabstract',
     r'^Graphical\sAbstract',
