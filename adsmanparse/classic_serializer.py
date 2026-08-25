@@ -1,4 +1,3 @@
-import html
 import itertools
 import re
 import string
@@ -30,6 +29,7 @@ class ClassicSerializer(object):
         try:
             newdata = u2asc.convert(data)
         except Exception as err:
+            print("Couldn't clean string: %s" % err)
             return data
         else:
             return newdata

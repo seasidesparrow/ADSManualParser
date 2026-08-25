@@ -36,9 +36,9 @@ def load_doi_bibcode(infile):
     doi_bibc = {}
     try:
         with open(infile, "r") as fd:
-            for l in fd.readlines():
-                (bibcode, doi) = l.strip().split("\t")
-                if "\.tmp" not in bibcode:
+            for line in fd.readlines():
+                (bibcode, doi) = line.strip().split("\t")
+                if ".tmp" not in bibcode:
                     if not doi_bibc.get(doi, None):
                         doi_bibc[doi] = bibcode
                     # else:

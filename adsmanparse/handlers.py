@@ -2,6 +2,11 @@ import os
 from datetime import date, timedelta
 from glob import glob
 
+from adsingestp.parsers.crossref import CrossrefParser
+
+from adsmanparse.classic_serializer import ClassicSerializer
+from adsmanparse.translator import Translator
+
 
 class NoBaseDirectoryException(Exception):
     pass
@@ -82,8 +87,8 @@ class RecentOAIPMH(object):
             self._getlogfiles()
             for f in self.logfiles:
                 with open(f, "r") as fl:
-                    for l in fl.readlines():
-                        xmlfiles.append("%s%s" % (self.basedir, l.strip().split("\t")[0]))
+                    for line in fl.readlines():
+                        xmlfiles.append("%s%s" % (self.basedir, line.strip().split("\t")[0]))
             return xmlfiles
         except Exception as err:
             raise GetInputFilesException("Unable to get a list of input xml files: %s" % err)

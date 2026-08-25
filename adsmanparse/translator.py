@@ -1,9 +1,8 @@
 import re
 
 from adsenrich.bibcodes import BibcodeGenerator
-from bs4 import BeautifulSoup
 
-from adsmanparse.exceptions import *
+from adsmanparse.exceptions import NoParsedDataException
 
 fix_ampersand = re.compile(r"(&amp;)(.*?)(;)")
 check_alphanumeric = re.compile(r"[A-Za-z]")
@@ -11,7 +10,7 @@ check_alphanumeric = re.compile(r"[A-Za-z]")
 try:
     bibgen = BibcodeGenerator()
 except Exception as err:
-    print("Warning, BibcodeGenerator not initialized!")
+    print("Warning, BibcodeGenerator not initialized! %s" % err)
 
 
 class Translator(object):
@@ -29,41 +28,6 @@ class Translator(object):
         self.doipage = doipage
         return
 
-    # DETAGGER (from jats.py)
-    def _detag(self, r, tags_keep, **kwargs):
-        newr = BeautifulSoup(str(r), "lxml-xml")
-        try:
-            tag_list = list(set([x.name for x in newr.find_all()]))
-        except Exception as err:
-            tag_list = []
-        for t in tag_list:
-            elements = newr.findAll(t)
-            for e in elements:
-                if t in JATS_TAGS_DANGER:
-                    e.decompose()
-                elif t in tags_keep:
-                    e.contents
-                else:
-                    if t.lower() == "sc":
-                        e.string = e.string.upper()
-                    e.unwrap()
-
-        # Note: newr is converted from a bs4 object to unicode here.
-        # Everything after this point is string manipulation.
-
-        newr = str(newr)
-
-        amp_fix = fix_ampersand.findall(newr)
-        for s in amp_fix:
-            s_old = "".join(s)
-            s_new = "&" + s[1] + ";"
-            newr = newr.replace(s_old, s_new)
-
-        newr = newr.replace("\n", " ").replace("  ", " ")
-        newr = newr.replace("&nbsp;", " ")
-
-        return newr
-
     # TITLE
     def _get_title(self):
         title = self.data.get("title", None)
@@ -80,7 +44,6 @@ class Translator(object):
             if subtitle:
                 subtitle_en = subtitle.get("textEnglish", None)
                 subtitle_tn = subtitle.get("textNative", None)
-                subtitle_ln = subtitle.get("langNative", None)
                 if subtitle_en:
                     self.output["title"] += ": " + subtitle_en
                 elif subtitle_tn:
@@ -111,6 +74,8 @@ class Translator(object):
             outname = given_name
         elif collab:
             outname = collab
+        elif pubraw:
+            outname = pubraw
         return outname, native
 
     # INDIVIDUAL AFFIL
@@ -136,11 +101,9 @@ class Translator(object):
                             for x in affid:
                                 aid_dict[x["affIDType"]] = x["affID"]
                             for system in ["ROR", "GRID", "ISNI"]:
-                                try:
+                                if aid_dict.get(system, None):
                                     aid_out = {system: aid_dict[system]}
                                     break
-                                except:
-                                    pass
                         affidarray.append(aid_out)
 
             if affidarray:
@@ -208,8 +171,6 @@ class Translator(object):
         abstract = self.data.get("abstract", None)
         if abstract:
             abstract_raw = abstract.get("textEnglish", None)
-            # tagset = JATS_TAGSET['abstract'] or None
-            # self.output['abstract'] = self._detag(abstract_raw, tagset)
             self.output["abstract"] = abstract_raw
 
     def _get_keywords(self):
@@ -286,6 +247,7 @@ class Translator(object):
                     m = "00"
                 self.output["pubdate"] = "%s/%s" % (m, y)
             except Exception as err:
+                print("Couldn't parse date: %s" % err)
                 pass
 
     def _get_properties(self, parsedfile):
@@ -380,7 +342,6 @@ class Translator(object):
             pubstring = ""
             if publication:
                 journal = publication.get("pubName", "")
-                year = publication.get("pubYear", "")
                 volume = publication.get("volumeNum", "")
                 issue = publication.get("issueNum", "")
                 publisher = publication.get("publisher", "")

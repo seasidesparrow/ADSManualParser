@@ -1,6 +1,6 @@
 from habanero.cn import content_negotiation as CoNe
 
-from adsmanparse.exceptions import *
+from adsmanparse.exceptions import HarvestFailException, NoDoiException
 
 
 class DoiHarvester(object):

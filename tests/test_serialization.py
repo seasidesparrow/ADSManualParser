@@ -2,8 +2,6 @@ import json
 import os
 import unittest
 
-import pytest
-
 from adsmanparse.classic_serializer import ClassicSerializer
 from adsmanparse.translator import Translator
 

@@ -1,5 +1,4 @@
 import argparse
-import json
 import os
 import re
 from datetime import datetime, timedelta
@@ -374,14 +373,11 @@ def write_record(record, args):
                 fout.write("%s\n" % tagged)
             tagged_list = tagged.split("\n")
             bibcode = None
-            for l in tagged_list:
-                try:
-                    (tag, value) = l.strip().split()
-                    if tag == "%R":
-                        bibcode = value
-                        break
-                except Exception as noop:
-                    pass
+            for item in tagged_list:
+                if item[0:2] == "%R":
+                    (tag, value) = item.strip().split()
+                    bibcode = value
+                    break
             if args.write_refs:
                 create_refs(rec=record, bibcode=bibcode, args=args)
         else:
@@ -514,8 +510,8 @@ def process_doilist(doilist, args):
 def process_input_file_list(args):
     try:
         with open(args.file_list, "r") as fi:
-            for l in fi.readlines():
-                procfile = l.strip()
+            for line in fi.readlines():
+                procfile = line.strip()
                 if os.path.exists(procfile):
                     args.proc_path = procfile
                     process_filepath(args)
@@ -525,8 +521,6 @@ def process_input_file_list(args):
 
 def main():
     args = get_args()
-    rawDataList = []
-    ingestDocList = []
 
     logger.debug("Initiating parsing with the following arguments: %s" % str(args))
 
@@ -545,8 +539,8 @@ def main():
             else:
                 try:
                     args.proc_since = int(args.proc_since)
-                except:
-                    logger.error("Your value for the age is not an integer")
+                except Exception as err:
+                    logger.error("Your value for the age is not an integer: %s" % err)
                     args.proc_since = 0
 
         # This route processes data from user-input files
@@ -565,8 +559,8 @@ def main():
             elif args.fetch_doi_list:
                 doiList = []
                 with open(args.fetch_doi_list, "r") as fin:
-                    for l in fin.readlines():
-                        doiList.append(l.strip())
+                    for line in fin.readlines():
+                        doiList.append(line.strip())
             process_doilist(doiList, args)
 
 

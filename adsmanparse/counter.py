@@ -56,10 +56,7 @@ class Counter(object):
                         newpage = page + 1
                         bibdata[bibstem]["ALL"] = newpage
                     else:
-                        try:
-                            page = bibdata[bibstem].pop(year)
-                        except:
-                            page = 0
+                        page = bibdata[bibstem].get(year, 0)
                         newpage = page + 1
                         bibdata[bibstem][year] = newpage
                 else:
