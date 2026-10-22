@@ -179,8 +179,8 @@ class Translator(object):
         uat_list = []
         # check whether *any* UAT keywords are present, and if so,
         # toss non-UAT keywords and only use %U and not %K
+        has_uat = False
         if keywords:
-            has_uat = False
             for k in keywords:
                 keyw = k.get("keyString", None)
                 keytype = k.get("keySystem", None)
