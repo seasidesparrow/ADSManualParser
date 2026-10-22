@@ -21,7 +21,7 @@ packages = [
 ]
 
 dependencies = [
-    'adsingestp @ git+https://github.com/adsabs/ADSIngestParser.git@v0.9.45',
+    'adsingestp @ git+https://github.com/adsabs/ADSIngestParser.git@v0.9.46',
     'adsenrich @ git+https://github.com/adsabs/ADSIngestEnrichment.git@v0.9.31',
     'click>=8.0.3',
     'beautifulsoup4==4.10.0',
